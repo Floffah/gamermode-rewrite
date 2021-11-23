@@ -17,10 +17,19 @@ public class GuiWindow {
     JFrame frame;
     JTextArea text;
 
+    /**
+     * Instantiates a new GUI window.
+     * @param main The main server instance.
+     */
     public GuiWindow(Server main) {
         this.main = main;
     }
 
+    /**
+     * Start a new GUI window instance if it is possible
+     * @param main The main server instance.
+     * @return The new instance of the GUI window.
+     */
     public static GuiWindow start(Server main) {
         boolean isDoubleClick = check();
         if ((isDoubleClick || (main.args.contains("-gui")) && !main.args.contains("-nogui"))) {
@@ -33,17 +42,31 @@ public class GuiWindow {
         return null;
     }
 
+    /**
+     * Check if the user double-clicked the file.
+     * @return True if the user double-clicked the file.
+     */
     public static boolean check() {
         Console console = System.console();
         return console == null;
     }
 
+    /**
+     * Util method to create a new GUI window instance properly.
+     * @param main The main server instance.
+     * @return The new instance of the GUI window.
+     * @throws IOException any error from the shutdown process.
+     */
     public static GuiWindow create(Server main) throws IOException {
         GuiWindow win = new GuiWindow(main);
         win.startOutput();
         return win;
     }
 
+    /**
+     * Creates the GUI window and starts the output.
+     * @throws IOException any error from the shutdown process.
+     */
     public void startOutput() throws IOException {
         this.frame = new JFrame("GamerMode Output");
 
@@ -95,11 +118,18 @@ public class GuiWindow {
         loaded = true;
     }
 
+    /**
+     * Stop and close the GUI window.
+     */
     public void stop() {
         frame.setVisible(false);
         frame = null;
     }
 
+    /**
+     * Append a new line to the GUI window.
+     * @param message The message to append.
+     */
     public void log(String message) {
         text.append(message);
     }

@@ -187,7 +187,7 @@
                         <link>https://javadoc.io/doc/com.fasterxml.jackson.core/jackson-databind/2.12.2/</link>
                         <link>https://fasterxml.github.io/jackson-dataformats-text/javadoc/yaml/2.12/</link>
                         <link>https://javadoc.io/doc/org.jetbrains/annotations/20.1.0/</link>
-                        <link>https://commons.apache.org/proper/commons-io/javadocs/api-2.5/</link>
+                        <link>https://javadoc.io/doc/commons-io/commons-io/2.11.0</link>
                     </links>
                     <linksource>true</linksource>
                     <notimestamp>true</notimestamp>
@@ -211,6 +211,13 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -225,7 +232,7 @@
         <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
-            <version>4.1.0</version>
+            <version>4.1.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -261,7 +268,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>22.0.0</version>
+            <version>23.0.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -273,6 +280,11 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Querz</groupId>
+            <artifactId>NBT</artifactId>
+            <version>6.1</version>
         </dependency>
     </dependencies>
 </project>

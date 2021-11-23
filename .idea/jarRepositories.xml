@@ -2,6 +2,11 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
+      <option name="id" value="jitpack.io" />
+      <option name="name" value="jitpack.io" />
+      <option name="url" value="https://jitpack.io" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="githubAssemble" />
       <option name="name" value="githubAssemble" />
       <option name="url" value="https://maven.pkg.github.com/ThatKawaiiSam/Assemble" />
