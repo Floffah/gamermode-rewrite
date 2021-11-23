@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Test" type="JarApplication">
     <option name="JAR_PATH" value="$PROJECT_DIR$/target/GamerMode-0.0.1-jar-with-dependencies.jar" />
-    <option name="PROGRAM_PARAMETERS" value="-gui -usewd" />
+    <option name="PROGRAM_PARAMETERS" value="-gui -usewd -debug" />
     <option name="WORKING_DIRECTORY" value="E:\projects\engine\gamermode-rewrite\test" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <module name="gamermode" />

@@ -5,10 +5,11 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import dev.floffah.gamermode.config.Config;
 import dev.floffah.gamermode.events.EventEmitter;
 import dev.floffah.gamermode.server.cache.CacheProvider;
+import dev.floffah.gamermode.server.socket.SocketManager;
 import dev.floffah.gamermode.visual.GuiWindow;
 import dev.floffah.gamermode.visual.Logger;
-import net.querz.nbt.io.NBTUtil;
-import net.querz.nbt.tag.CompoundTag;
+import net.querz.nbt.io.NBTDeserializer;
+import net.querz.nbt.io.NBTSerializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +57,15 @@ public class Server {
 
     // encryption
     public KeyPairGenerator keyPairGenerator;
+
+    // nbt
+    public NBTSerializer nbtSerializer;
+    public NBTSerializer compressedNbtSerializer;
+    public NBTDeserializer nbtDeserializer;
+    public NBTDeserializer compressedNbtDeserializer;
+
+    // io
+    public SocketManager sock;
 
     /**
      * initialise a new server instance
@@ -119,7 +129,20 @@ public class Server {
             this.fatalShutdown(e);
         }
 
+        // nbt
+        this.nbtSerializer = new NBTSerializer();
+        this.compressedNbtSerializer = new NBTSerializer(true);
+        this.nbtDeserializer = new NBTDeserializer();
+        this.compressedNbtDeserializer = new NBTDeserializer(true);
+
         this.logger.info("Server initialised. Starting socket...");
+
+        this.sock = new SocketManager(this);
+        try {
+            this.sock.start();
+        } catch (IOException e) {
+            this.fatalShutdown(e);
+        }
     }
 
     /**
