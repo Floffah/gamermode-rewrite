@@ -5,6 +5,8 @@
     <option name="WORKING_DIRECTORY" value="E:\projects\engine\gamermode-rewrite\test" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <module name="gamermode" />
-    <method v="2" />
+    <method v="2">
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="package" />
+    </method>
   </configuration>
 </component>
