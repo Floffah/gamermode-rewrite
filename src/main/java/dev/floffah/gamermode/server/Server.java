@@ -8,9 +8,6 @@ import dev.floffah.gamermode.server.cache.CacheProvider;
 import dev.floffah.gamermode.server.socket.SocketManager;
 import dev.floffah.gamermode.visual.GuiWindow;
 import dev.floffah.gamermode.visual.Logger;
-import net.querz.nbt.io.NBTDeserializer;
-import net.querz.nbt.io.NBTSerializer;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,8 +19,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import net.querz.nbt.io.NBTDeserializer;
+import net.querz.nbt.io.NBTSerializer;
 
 public class Server {
+
     public static Server server;
 
     // output
@@ -84,7 +84,13 @@ public class Server {
         this.gui = GuiWindow.start(this);
 
         // info
-        this.logger.info(String.format("Running on Java version %s on %s", System.getProperty("java.version"), System.getProperty("os.name")));
+        this.logger.info(
+                String.format(
+                    "Running on Java version %s on %s",
+                    System.getProperty("java.version"),
+                    System.getProperty("os.name")
+                )
+            );
 
         // events
         this.events = new EventEmitter(this);
@@ -96,7 +102,18 @@ public class Server {
             if (this.args.contains("-usewd")) {
                 this.rootDir = System.getProperty("user.dir");
             } else {
-                this.rootDir = Paths.get(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParent().toUri().getPath();
+                this.rootDir =
+                    Paths
+                        .get(
+                            getClass()
+                                .getProtectionDomain()
+                                .getCodeSource()
+                                .getLocation()
+                                .toURI()
+                        )
+                        .getParent()
+                        .toUri()
+                        .getPath();
             }
             // create or load config
             this.configFile = Path.of(this.rootDir, "config.yml").toFile();
@@ -115,8 +132,12 @@ public class Server {
         dataDir.toFile().mkdirs();
 
         // threading
-        this.pool = Executors.newFixedThreadPool(this.config.performance.poolSize);
-        this.scheduler = Executors.newScheduledThreadPool(this.config.performance.scheduledPoolSize);
+        this.pool =
+            Executors.newFixedThreadPool(this.config.performance.poolSize);
+        this.scheduler =
+            Executors.newScheduledThreadPool(
+                this.config.performance.scheduledPoolSize
+            );
         this.taskPool = Executors.newCachedThreadPool();
 
         // cache
