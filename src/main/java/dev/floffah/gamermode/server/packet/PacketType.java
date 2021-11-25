@@ -6,7 +6,7 @@ public enum PacketType {
      */
     SERVERBOUND,
     /**
-     * Packet type representing any packet that may be sent to the client.
+     * Packet type representing any packet that may be sent to the player.
      */
     CLIENTBOUND,
     /**

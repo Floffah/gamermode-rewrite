@@ -45,7 +45,7 @@ public class EventEmitter {
             if (evn == null) continue;
             Class<? extends Event> eused;
             if (m.getParameterTypes().length != 1 || !Event.class.isAssignableFrom(eused = (Class<? extends Event>) m.getParameterTypes()[0])) {
-                server.logger.err(String.format("Method %s() in class %s has incorrect parameters", m.getName(), l.getClass().getName()));
+                server.getLogger().err(String.format("Method %s() in class %s has incorrect parameters", m.getName(), l.getClass().getName()));
                 continue;
             }
             Executor e = new Executor() {
@@ -54,7 +54,7 @@ public class EventEmitter {
                     try {
                         m.invoke(l, event);
                     } catch (IllegalAccessException | InvocationTargetException e) {
-                        server.logger.printStackTrace(e);
+                        server.getLogger().printStackTrace(e);
                     }
                 }
             };

@@ -44,7 +44,7 @@ public class Logger {
      * @param message The message to log
      */
     public void debug(String... message) {
-        if (main.debugMode) {
+        if (main.isDebugMode()) {
             log(getFormat("debug") + String.join(" ", message) + "\n");
         }
     }
@@ -55,7 +55,7 @@ public class Logger {
      * @param message The message to log
      */
     public void debugwarn(String... message) {
-        if (main.debugMode) {
+        if (main.isDebugMode()) {
             log(getFormat("debugwarn") + String.join(" ", message) + "\n");
         }
     }
@@ -87,9 +87,9 @@ public class Logger {
     public void printStackTrace(Exception e) {
         String[] stack = ExceptionUtils.getStackFrames(e);
         for (String s : stack) {
-            err(!main.debugMode, s);
+            err(!main.isDebugMode(), s);
         }
-        if (main.debugMode) e.printStackTrace();
+        if (main.isDebugMode()) e.printStackTrace();
     }
 
     /**
@@ -118,8 +118,8 @@ public class Logger {
      * @param dosout  Whether to print the message to the console as well as the GUI window
      */
     public void log(String message, boolean dosout) {
-        if (main.gui != null && main.gui.loaded) {
-            main.gui.log(message);
+        if (main.getGui() != null && main.getGui().loaded) {
+            main.getGui().log(message);
         }
         if (dosout) System.out.print(message);
     }

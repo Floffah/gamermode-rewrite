@@ -21,13 +21,13 @@ public class Handshake extends BasePacket {
         int port = in.readUnsignedShort();
         int next = VarInt.readVarInt(in);
 
-        conn.protocolVersion = protocol;
-        conn.addressProvided = addr;
-        conn.portProvided = port;
+        conn.setProtocolVersion(protocol);
+        conn.setAddressProvided(addr);
+        conn.setPortProvided(port);
         if (next == 1) {
-            conn.state = ConnectionState.STATUS;
+            conn.setState(ConnectionState.STATUS);
         } else {
-            conn.state = ConnectionState.LOGIN;
+            conn.setState(ConnectionState.LOGIN);
         }
     }
 }

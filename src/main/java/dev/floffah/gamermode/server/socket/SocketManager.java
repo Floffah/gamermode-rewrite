@@ -1,6 +1,8 @@
 package dev.floffah.gamermode.server.socket;
 
 import dev.floffah.gamermode.server.Server;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -9,10 +11,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SocketManager {
-    public Server server;
-
     public ServerSocket sock;
     public List<SocketConnection> connections = new LinkedList<>();
+
+    /**
+     * Get the server instance
+     * -- GETTER --
+     * The server instance
+     *
+     * @return Server instance
+     */
+    @Getter
+    protected Server server;
 
     public SocketManager(Server server) {
         this.server = server;
@@ -20,12 +30,13 @@ public class SocketManager {
 
     /**
      * Start accepting connections
+     *
      * @throws IOException any exception thrown from initialising a java server socket
      */
     public void start() throws IOException {
-        this.sock = new ServerSocket(this.server.config.info.port);
+        this.sock = new ServerSocket(this.server.getConfig().info.port);
         this.listen();
-        this.server.logger.info("Listening on " + sock.getLocalSocketAddress().toString());
+        this.server.getLogger().info("Listening on " + sock.getLocalSocketAddress().toString());
     }
 
     /**
@@ -35,27 +46,28 @@ public class SocketManager {
         Runnable listener = () -> {
             while (true) {
                 try {
-                    this.server.logger.debug("Waiting for connection...");
+                    this.server.getLogger().debug("Waiting for connection...");
                     Socket csock = this.sock.accept();
-                    this.server.logger.info("New connection from" + csock.getRemoteSocketAddress().toString());
-                    this.server.taskPool.execute(() -> {
+                    this.server.getLogger().info("New connection from" + csock.getRemoteSocketAddress().toString());
+                    this.server.getTaskPool().execute(() -> {
                         try {
                             this.connections.add(new SocketConnection(this, csock));
                         } catch (IOException e) {
-                            this.server.logger.printStackTrace(e);
+                            this.server.getLogger().printStackTrace(e);
                         }
                     });
                 } catch (IOException e) {
-                    this.server.logger.printStackTrace(e);
+                    this.server.getLogger().printStackTrace(e);
                 }
             }
         };
 
-        this.server.pool.execute(listener);
+        this.server.getPool().execute(listener);
     }
 
     /**
      * Util function to dispose of a connection
+     *
      * @param conn The connection to dispose of
      * @throws IOException any exception thrown from closing the socket connection
      */
@@ -67,6 +79,7 @@ public class SocketManager {
 
     /**
      * Stop the socket manager
+     *
      * @throws IOException any exception thrown from stopping the socket
      */
     public void stop() throws IOException {

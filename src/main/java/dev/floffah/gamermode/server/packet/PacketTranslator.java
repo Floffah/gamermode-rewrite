@@ -18,13 +18,13 @@ public class PacketTranslator {
 
     public static BasePacket identify(int id, SocketConnection conn) throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         BasePacket packet = new BasePacket("UNKNOWN", 0x00, PacketType.UNKNOWN);
-        PacketKey key = new PacketKey(id, conn.state);
+        PacketKey key = new PacketKey(id, conn.getState());
 
         if (known.containsKey(key)) {
             packet = known.get(key).getConstructor().newInstance();
         } else {
             for (AllServerBoundPackets serverBoundPacket : AllServerBoundPackets.values()) {
-                if (conn.state == serverBoundPacket.state && serverBoundPacket.id == id) {
+                if (conn.getState() == serverBoundPacket.state && serverBoundPacket.id == id) {
                     known.put(key, serverBoundPacket.packet);
                     packet = serverBoundPacket.packet.getConstructor().newInstance();
                 }

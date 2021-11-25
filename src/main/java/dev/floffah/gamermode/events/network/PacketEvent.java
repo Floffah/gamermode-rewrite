@@ -27,7 +27,8 @@ public class PacketEvent extends Event {
     ByteArrayDataOutput unencrypted;
 
     /**
-     * Construct a new packet event
+     * Separate packet event for cancelling a packet before it is sent;
+     * Please remember that the byte array in this event does not include the length or packet id. Use the size/length methods for length and the id from the packet class
      * @param packet Packet associated with the event
      * @param bytes Packet bytes
      */
@@ -38,6 +39,7 @@ public class PacketEvent extends Event {
 
     /**
      * Get the byte array being sent or that was sent. This byte array is the unencrypted version.
+     * Please remember that the byte array in this event does not include the length or packet id. Use the size/length methods for length and the id from the packet class
      *
      * @return unencrypted byte array
      */

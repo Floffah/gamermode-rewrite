@@ -18,9 +18,9 @@ public class Response extends BasePacket {
     public ByteArrayDataOutput buildOutput() throws IOException {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
-        String motd = conn.main.server.config.info.motd;
-        if (conn.protocolVersion >= 0 && conn.protocolVersion < conn.main.server.protocolVersion) {
-            motd = String.format("&cClient version out of date (%s@C %s@S)", conn.protocolVersion, conn.main.server.protocolVersion);
+        String motd = conn.getSocketManager().getServer().getConfig().info.motd;
+        if (conn.getProtocolVersion() >= 0 && conn.getProtocolVersion() < conn.getSocketManager().getServer().getProtocolVersion()) {
+            motd = String.format("&cClient version out of date (%s@C %s@S)", conn.getProtocolVersion(), conn.getSocketManager().getServer().getProtocolVersion());
         }
 
         Strings.writeUTF(String.format("""
@@ -42,7 +42,7 @@ public class Response extends BasePacket {
                     "description": {
                         "text": "%s"
                     }
-                }""", conn.main.server.protocolVersion, conn.main.server.config.players.max, motd.replaceAll("&", "§")), out);
+                }""", conn.getSocketManager().getServer().getProtocolVersion(), conn.getSocketManager().getServer().getConfig().players.max, motd.replaceAll("&", "§")), out);
 
         return out;
     }

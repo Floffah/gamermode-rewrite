@@ -32,11 +32,11 @@ public class GuiWindow {
      */
     public static GuiWindow start(Server main) {
         boolean isDoubleClick = check();
-        if ((isDoubleClick || (main.args.contains("-gui")) && !main.args.contains("-nogui"))) {
+        if ((isDoubleClick || (main.getArgs().contains("-gui")) && !main.getArgs().contains("-nogui"))) {
             try {
                 return create(main);
             } catch (IOException e) {
-                main.logger.printStackTrace(e);
+                main.getLogger().printStackTrace(e);
             }
         }
         return null;
@@ -83,13 +83,13 @@ public class GuiWindow {
         try {
             InputStream fonts = getClass().getClassLoader().getResourceAsStream("JetBrainsMono-Regular.ttf");
             if (fonts == null) {
-                main.logger.info("Does not exist");
+                main.getLogger().info("Does not exist");
                 main.shutdown();
                 return;
             }
             font = Font.createFont(Font.TRUETYPE_FONT, fonts);
         } catch (FontFormatException | IOException | NullPointerException e) {
-            main.logger.printStackTrace(e);
+            main.getLogger().printStackTrace(e);
             main.shutdown();
             return;
         }
@@ -106,7 +106,7 @@ public class GuiWindow {
                 try {
                     main.shutdown();
                 } catch (IOException ioException) {
-                    main.logger.printStackTrace(ioException);
+                    main.getLogger().printStackTrace(ioException);
                 }
             }
         });

@@ -2,6 +2,7 @@ package dev.floffah.gamermode.server.packet.serverlist;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import dev.floffah.gamermode.events.network.PacketSentEvent;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
 
@@ -20,5 +21,10 @@ public class Pong extends BasePacket {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeLong(payload);
         return out;
+    }
+
+    @Override
+    public void postSend(PacketSentEvent e) throws IOException {
+        this.conn.close();
     }
 }

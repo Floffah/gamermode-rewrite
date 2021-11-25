@@ -35,7 +35,7 @@ public class CacheProvider {
     public CacheProvider(Server server) {
         this.server = server;
 
-        cachedir = Path.of(server.dataDir.toString(), "cache").toFile();
+        cachedir = Path.of(server.getDataDir().toString(), "cache").toFile();
         if (!cachedir.exists()) cachedir.mkdirs();
 
         Path cacheinfo = Path.of(cachedir.getPath(), "cacheinfo.dat");
@@ -49,7 +49,7 @@ public class CacheProvider {
             }
             validate();
         } catch (IOException e) {
-            server.logger.printStackTrace(e);
+            server.getLogger().printStackTrace(e);
         }
     }
 
