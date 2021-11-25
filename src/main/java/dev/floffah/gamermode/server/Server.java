@@ -67,6 +67,9 @@ public class Server {
     // io
     public SocketManager sock;
 
+    // meta
+    public int protocolVersion = 756;
+
     /**
      * initialise a new server instance
      *

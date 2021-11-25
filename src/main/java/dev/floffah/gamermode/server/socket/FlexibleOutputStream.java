@@ -17,12 +17,19 @@ public class FlexibleOutputStream extends OutputStream {
         this.out = out;
     }
 
+    /**
+     * Encrypts the stream.
+     * @param cipher The cipher to use.
+     */
     public void enableEncryption(Cipher cipher) {
         this.cipher = cipher;
         this.cout = new CipherOutputStream(out, cipher);
         this.encrypted = true;
     }
 
+    /**
+     * Disables encryption.
+     */
     public void disableEncryption() {
         this.encrypted = false;
     }

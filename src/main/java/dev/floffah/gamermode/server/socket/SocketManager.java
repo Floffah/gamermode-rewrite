@@ -61,7 +61,7 @@ public class SocketManager {
      */
     public void disposeConnection(SocketConnection conn) throws IOException {
         this.connections.remove(conn);
-        conn.sock.close();
+        if (conn.sock != null && !conn.sock.isClosed()) conn.sock.close();
         conn = null;
     }
 

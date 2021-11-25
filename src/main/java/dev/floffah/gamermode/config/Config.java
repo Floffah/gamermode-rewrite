@@ -33,7 +33,7 @@ public class Config {
      */
     public static class ServerInfo {
         /**
-         * Server's server list MOTD. Supports color codes using an ampersand (\u0026)
+         * Server's server list MOTD. Supports color codes using an ampersand (&amp;)
          */
         public String motd = "Minecraft server";
         /**

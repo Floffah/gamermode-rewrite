@@ -18,17 +18,25 @@ public class FlexibleInputStream extends InputStream {
         this.in = in;
     }
 
+    /**
+     * Enable decryption on this stream.
+     * @param cipher The cipher to use for decryption.
+     */
     public void enableDecryption(Cipher cipher) {
         this.cipher = cipher;
-        this.cin = new CipherInputStream(in, cipher) {
-            @Override
-            public int available() throws IOException {
-                return in.available();
-            }
-        };
+        this.cin = new CipherInputStream(in, cipher);
+        //{
+        //            @Override
+        //            public int available() throws IOException {
+        //                return in.available();
+        //            }
+        //        };
         this.decrypting = true;
     }
 
+    /**
+     * Disable decryption.
+     */
     public void disableDecryption() {
         this.decrypting = false;
     }
