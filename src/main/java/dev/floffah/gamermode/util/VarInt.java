@@ -2,7 +2,6 @@ package dev.floffah.gamermode.util;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

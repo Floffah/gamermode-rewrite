@@ -1,13 +1,12 @@
 package dev.floffah.gamermode.server.socket;
 
 import dev.floffah.gamermode.server.Server;
-import lombok.Getter;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
+import lombok.Getter;
 
 public class SocketManager {
 
@@ -52,14 +51,14 @@ public class SocketManager {
                     this.server.getLogger()
                         .info(
                             "New connection from" +
-                                csock.getRemoteSocketAddress().toString()
+                            csock.getRemoteSocketAddress().toString()
                         );
                     this.server.getTaskPool()
                         .execute(() -> {
                             try {
                                 this.connections.add(
-                                    new SocketConnection(this, csock)
-                                );
+                                        new SocketConnection(this, csock)
+                                    );
                             } catch (IOException e) {
                                 this.server.getLogger().printStackTrace(e);
                             }
