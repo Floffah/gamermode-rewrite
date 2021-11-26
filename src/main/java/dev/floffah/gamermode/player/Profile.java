@@ -1,5 +1,7 @@
 package dev.floffah.gamermode.player;
 
+import dev.floffah.gamermode.error.UUIDMismatchException;
+import dev.floffah.gamermode.world.WorldManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
 import lombok.Getter;
+import net.querz.nbt.tag.CompoundTag;
+import net.querz.nbt.tag.IntArrayTag;
 import org.json.JSONObject;
 
 public class Profile {
@@ -29,7 +33,7 @@ public class Profile {
         this.player = player;
     }
 
-    public void doHasJoined() throws IOException {
+    public void doHasJoined() throws IOException, UUIDMismatchException {
         URL joinUrl = new URL(
             sessionhasJoinedURL +
             "?username=" +
@@ -69,6 +73,34 @@ public class Profile {
         if (
             !this.player.username.equals(response.getString("name"))
         ) this.player.username = response.getString("name");
+
+        WorldManager wm =
+            this.getPlayer()
+                .getConn()
+                .getSocketManager()
+                .getServer()
+                .getWorldManager();
+
+        if (wm.hasRawPlayerData(this.getPlayer().getUniqueId())) {
+            CompoundTag rawdata = wm.readRawPlayerData(
+                this.getPlayer().getUniqueId()
+            );
+
+            int[] uuidInts = ((IntArrayTag) rawdata.get("UUID")).getValue();
+
+            int uuidMostA = uuidInts[0];
+            int uuidMostB = uuidInts[1];
+            int uuidLeastA = uuidInts[2];
+            int uuidLeastB = uuidInts[3];
+            long uuidMost = (long) uuidMostA << 32 | uuidMostB & 0xFFFFFFFFL;
+            long uuidLeast = (long) uuidLeastA << 32 | uuidLeastB & 0xFFFFFFFFL;
+
+            UUID uuid = new UUID(uuidMost, uuidLeast);
+
+            if (!this.getPlayer().getUniqueId().equals(uuid)) throw new UUIDMismatchException();
+        }
+
+        wm.writeRawPlayerData(this.getPlayer());
     }
 
     /**

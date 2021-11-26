@@ -191,7 +191,7 @@
                     <reportOutputDirectory
                     >${project.basedir}/docs</reportOutputDirectory>
                     <destDir>docs</destDir>
-                    <show>private</show>
+                    <show>public</show>
                     <detectJavaApiLink>true</detectJavaApiLink>
                     <nohelp>true</nohelp>
                     <links>

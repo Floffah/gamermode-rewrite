@@ -1,11 +1,12 @@
 package dev.floffah.gamermode.player;
 
+import dev.floffah.gamermode.entity.Entity;
 import dev.floffah.gamermode.server.socket.SocketConnection;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Player {
+public class Player implements Entity {
 
     /**
      * The player's connection
@@ -47,9 +48,21 @@ public class Player {
     @Getter
     protected UUID uniqueId;
 
+    /**
+     * The player's entity ID
+     * -- GETTER --
+     * Get the player's entity ID
+     *
+     * @return The player's entity ID
+     */
+    @Getter
+    protected int entityID;
+
     public Player(SocketConnection conn) {
         this.conn = conn;
 
         this.profile = new Profile(this);
+
+        this.entityID = conn.getSocketManager().getServer().getNextEntityID();
     }
 }

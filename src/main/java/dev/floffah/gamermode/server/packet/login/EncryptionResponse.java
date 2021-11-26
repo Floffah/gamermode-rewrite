@@ -1,6 +1,7 @@
 package dev.floffah.gamermode.server.packet.login;
 
 import com.google.common.io.ByteArrayDataInput;
+import dev.floffah.gamermode.error.UUIDMismatchException;
 import dev.floffah.gamermode.events.network.PacketSentEvent;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
@@ -181,12 +182,23 @@ public class EncryptionResponse extends BasePacket {
             return;
         }
 
-        this.conn.getPlayer().getProfile().doHasJoined();
-
         // enable encryption
         this.conn.setEncrypted(true);
         this.conn.getBaseIn().enableDecryption(this.conn.getDecryptCipher());
         this.conn.getBaseOut().enableEncryption(this.conn.getEncryptCipher());
+
+        try {
+            this.conn.getPlayer().getProfile().doHasJoined();
+        } catch (UUIDMismatchException e) {
+            this.conn.getSocketManager()
+                .getServer()
+                .getLogger()
+                .printStackTrace(e);
+            this.conn.disconnect(
+                Component.text(e.getMessage()).color(NamedTextColor.RED)
+            );
+            return;
+        }
 
         // sent new packets
         this.conn.send(new LoginSuccess());

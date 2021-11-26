@@ -3,6 +3,7 @@ bigtest.copy.nbt
 docs/
 target/lombok-sources/delombok
 target/lombok-test-sources/delombok
+test/data
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/java,maven,gradle,intellij,jetbrains,node,yarn

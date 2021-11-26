@@ -35,7 +35,7 @@ public class CacheProvider {
     public CacheProvider(Server server) {
         this.server = server;
 
-        cachedir = Path.of(server.getDataDir().toString(), "cache").toFile();
+        cachedir = Path.of(server.getDataDir().getPath(), "cache").toFile();
         if (!cachedir.exists()) cachedir.mkdirs();
 
         Path cacheinfo = Path.of(cachedir.getPath(), "cacheinfo.dat");

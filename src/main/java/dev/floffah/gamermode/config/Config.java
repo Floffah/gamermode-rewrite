@@ -47,6 +47,7 @@ public class Config {
          * 3 - hard<br/>
          */
         public byte difficulty = 1;
+        public boolean isHardcore = false;
         /**
          * Server port to listen on
          */

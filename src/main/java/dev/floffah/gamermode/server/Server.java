@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+
+import dev.floffah.gamermode.world.WorldManager;
 import lombok.Getter;
 
 public class Server {
@@ -83,7 +85,7 @@ public class Server {
      * @return The server's running/root directory
      */
     @Getter
-    protected String rootDir;
+    protected File rootDir;
 
     /**
      * The directory the server stores its data in
@@ -93,7 +95,7 @@ public class Server {
      * @return The directory the server stores its data in
      */
     @Getter
-    protected Path dataDir;
+    protected File dataDir;
 
     /**
      * The server's event emitter
@@ -168,6 +170,16 @@ public class Server {
     protected SocketManager sock;
 
     /**
+     * The server's world manager
+     * -- GETTER --
+     * Get the server's world manager
+     *
+     * @return The server's world manager
+     */
+    @Getter
+    protected WorldManager worldManager;
+
+    /**
      * The server's protocol version
      * -- GETTER --
      * Get the server's protocol version
@@ -199,6 +211,7 @@ public class Server {
 
     ObjectMapper om;
     File configFile;
+    private int latestEntityID = Integer.MIN_VALUE;
 
     /**
      * initialise a new server instance
@@ -234,7 +247,7 @@ public class Server {
         try {
             // get root dir
             if (this.args.contains("-usewd")) {
-                this.rootDir = System.getProperty("user.dir");
+                this.rootDir = Paths.get(System.getProperty("user.dir")).toFile();
             } else {
                 this.rootDir =
                     Paths
@@ -245,12 +258,10 @@ public class Server {
                                 .getLocation()
                                 .toURI()
                         )
-                        .getParent()
-                        .toUri()
-                        .getPath();
+                        .getParent().toFile();
             }
             // create or load config
-            this.configFile = Path.of(this.rootDir, "config.yml").toFile();
+            this.configFile = Path.of(this.rootDir.getPath(), "config.yml").toFile();
             if (!configFile.exists()) {
                 this.config = new Config();
                 saveConfig();
@@ -262,8 +273,8 @@ public class Server {
         }
 
         // directories
-        this.dataDir = Path.of(this.rootDir, "data");
-        dataDir.toFile().mkdirs();
+        this.dataDir = Path.of(this.rootDir.getPath(), "data").toFile();
+        dataDir.mkdirs();
 
         // threading
         this.pool =
@@ -284,6 +295,9 @@ public class Server {
             this.fatalShutdown(e);
         }
 
+        this.worldManager = new WorldManager(this);
+        this.worldManager.loadWorlds();
+
         this.getLogger().info("Server initialised. Starting socket...");
 
         this.sock = new SocketManager(this);
@@ -292,6 +306,11 @@ public class Server {
         } catch (IOException e) {
             this.fatalShutdown(e);
         }
+    }
+
+    public int getNextEntityID() {
+        if (this.latestEntityID == Integer.MAX_VALUE) return latestEntityID = Integer.MIN_VALUE;
+        return latestEntityID++;
     }
 
     /**
