@@ -1,6 +1,5 @@
 package dev.floffah.gamermode.events.network;
 
-
 import com.google.common.io.ByteArrayDataOutput;
 import dev.floffah.gamermode.events.Event;
 import dev.floffah.gamermode.server.packet.BasePacket;
@@ -12,6 +11,7 @@ import lombok.Setter;
  * An event class that is only to be extended upon by other packet events
  */
 public class PacketEvent extends Event {
+
     /**
      * The packet associated with the event
      * -- GETTER --
@@ -24,6 +24,7 @@ public class PacketEvent extends Event {
     @Getter
     @Setter
     BasePacket packet;
+
     ByteArrayDataOutput unencrypted;
 
     /**

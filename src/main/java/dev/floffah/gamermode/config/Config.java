@@ -1,6 +1,7 @@
 package dev.floffah.gamermode.config;
 
 public class Config {
+
     /**
      * Player related settings
      */
@@ -22,6 +23,7 @@ public class Config {
      * Player related settings
      */
     public static class PlayerConf {
+
         /**
          * Maximum players
          */
@@ -32,6 +34,7 @@ public class Config {
      * Main server info settings
      */
     public static class ServerInfo {
+
         /**
          * Server's server list MOTD. Supports color codes using an ampersand (&amp;)
          */
@@ -54,6 +57,7 @@ public class Config {
      * World settings
      */
     public static class WorldInfo {
+
         /**
          * Name of the world. Affects storage names.
          */
@@ -68,6 +72,7 @@ public class Config {
      * Performance settings
      */
     public static class Performance {
+
         /**
          * Size of the thread pool
          */

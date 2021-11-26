@@ -5,15 +5,15 @@ import com.google.common.io.ByteStreams;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.util.Strings;
+import java.io.IOException;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-
-import java.io.IOException;
 
 /**
  * Outgoing play packet for disconnecting the user
  */
 public class Disconnect extends BasePacket {
+
     /**
      * Reason for the disconnect
      */
@@ -24,7 +24,7 @@ public class Disconnect extends BasePacket {
      * @param chat The reason
      */
     public Disconnect(TextComponent chat) {
-        super("Disconnect", 0x19, PacketType.CLIENTBOUND);
+        super("Disconnect", 0x1A, PacketType.CLIENTBOUND);
         this.chat = chat;
     }
 

@@ -4,10 +4,10 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import dev.floffah.gamermode.events.network.PacketSentEvent;
 import dev.floffah.gamermode.server.socket.SocketConnection;
-
 import java.io.IOException;
 
 public class BasePacket {
+
     public String name;
     public int id;
     public SocketConnection conn;
@@ -25,8 +25,7 @@ public class BasePacket {
      * @param in Byte array
      * @throws IOException Any exception thrown
      */
-    public void process(int len, ByteArrayDataInput in) throws IOException {
-    }
+    public void process(int len, ByteArrayDataInput in) throws IOException {}
 
     /**
      * Packet's built outgoing byte array
@@ -42,7 +41,5 @@ public class BasePacket {
      * @param e The sent event
      * @throws IOException Any exception thrown
      */
-    public void postSend(PacketSentEvent e) throws IOException {
-
-    }
+    public void postSend(PacketSentEvent e) throws IOException {}
 }

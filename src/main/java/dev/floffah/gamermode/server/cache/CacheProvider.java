@@ -1,19 +1,19 @@
 package dev.floffah.gamermode.server.cache;
 
 import dev.floffah.gamermode.server.Server;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
+import org.json.JSONObject;
 
 /**
  * Server cache<br/>
  * Currently isn't used
  */
 public class CacheProvider {
+
     /**
      * The directory containing cache
      */
@@ -59,18 +59,30 @@ public class CacheProvider {
      * @throws IOException Any exceptions thrown along the way
      */
     public void validate() throws IOException {
-        if (!inf.has("lastPlayerPurge") || inf.getLong("lastPlayerPurge") < (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1))) {
+        if (
+            !inf.has("lastPlayerPurge") ||
+            inf.getLong("lastPlayerPurge") <
+            (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1))
+        ) {
             File entriesdir = Path.of(cachedir.getPath(), "ids").toFile();
             if (!entriesdir.exists()) entriesdir.mkdirs();
             File[] entries = entriesdir.listFiles();
             if (entries == null || entries.length <= 0) return;
             for (File entry : entries) {
                 if (!entry.isDirectory()) {
-                    JSONObject idcache = new JSONObject(Files.readString(entry.toPath()));
-                    if (idcache.getLong("lastCheck") < (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1))) {
+                    JSONObject idcache = new JSONObject(
+                        Files.readString(entry.toPath())
+                    );
+                    if (
+                        idcache.getLong("lastCheck") <
+                        (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1))
+                    ) {
                         if (!entry.delete()) {
                             idcache.put("lastCheck", (long) 0);
-                            Files.writeString(entry.toPath(), idcache.toString());
+                            Files.writeString(
+                                entry.toPath(),
+                                idcache.toString()
+                            );
                         }
                     }
                 }

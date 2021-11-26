@@ -1,5 +1,7 @@
 package dev.floffah.gamermode.server.socket;
 
+import static org.awaitility.Awaitility.await;
+
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -12,16 +14,6 @@ import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.connection.Disconnect;
 import dev.floffah.gamermode.server.packet.connection.LoginDisconnect;
 import dev.floffah.gamermode.util.VarInt;
-import lombok.Getter;
-import lombok.Setter;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import org.awaitility.core.ConditionTimeoutException;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -31,10 +23,18 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.security.KeyPair;
 import java.util.Arrays;
-
-import static org.awaitility.Awaitility.await;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import lombok.Getter;
+import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import org.awaitility.core.ConditionTimeoutException;
 
 public class SocketConnection {
+
     /**
      * The current state of the connection.
      * <p>
@@ -45,6 +45,7 @@ public class SocketConnection {
      */
     @Getter
     protected ConnectionState state;
+
     /**
      * The socket of the connection
      * -- GETTER --
@@ -54,6 +55,7 @@ public class SocketConnection {
      */
     @Getter
     protected SocketManager socketManager;
+
     /**
      * The connection's socket
      * -- GETTER --
@@ -63,6 +65,7 @@ public class SocketConnection {
      */
     @Getter
     protected Socket sock;
+
     /**
      * The input stream of the connection
      * -- GETTER --
@@ -72,6 +75,7 @@ public class SocketConnection {
      */
     @Getter
     protected DataInputStream in;
+
     /**
      * The output stream of the connection
      * -- GETTER --
@@ -81,6 +85,7 @@ public class SocketConnection {
      */
     @Getter
     protected DataOutputStream out;
+
     /**
      * The flexible data input stream of the connection
      * -- GETTER --
@@ -90,6 +95,7 @@ public class SocketConnection {
      */
     @Getter
     protected FlexibleInputStream baseIn;
+
     /**
      * The flexible data output stream of the connection
      * -- GETTER --
@@ -99,6 +105,7 @@ public class SocketConnection {
      */
     @Getter
     protected FlexibleOutputStream baseOut;
+
     /**
      * Whether or not the connection is closed
      * -- GETTER --
@@ -108,6 +115,7 @@ public class SocketConnection {
      */
     @Getter
     protected boolean closed = false;
+
     /**
      * The last time in milliseconds that a keep alive packet was sent.
      * -- GETTER --
@@ -117,6 +125,7 @@ public class SocketConnection {
      */
     @Getter
     protected long lastKeepaliveSent = 0;
+
     /**
      * The last time in milliseconds that a keep alive packet was received.
      * -- GETTER --
@@ -126,6 +135,7 @@ public class SocketConnection {
      */
     @Getter
     protected long lastKeepaliveReceived = 0;
+
     /**
      * The current keep alive packet ID
      * -- GETTER --
@@ -135,6 +145,7 @@ public class SocketConnection {
      */
     @Getter
     protected long currentKeepaliveID = 0;
+
     /**
      * The last time in milliseconds that a packet was received.
      * -- GETTER --
@@ -145,6 +156,7 @@ public class SocketConnection {
     @Getter
     @Setter
     protected long lastPacketReceived = System.currentTimeMillis();
+
     /**
      * The client's protocol version
      * -- GETTER --
@@ -158,6 +170,7 @@ public class SocketConnection {
     @Getter
     @Setter
     protected int protocolVersion;
+
     /**
      * The address provided by the client
      * -- GETTER --
@@ -171,6 +184,7 @@ public class SocketConnection {
     @Getter
     @Setter
     protected String addressProvided;
+
     /**
      * The port provided by the client
      * -- GETTER --
@@ -184,6 +198,7 @@ public class SocketConnection {
     @Getter
     @Setter
     protected int portProvided;
+
     /**
      * Whether or not the connection is encrypted
      * -- GETTER --
@@ -194,6 +209,7 @@ public class SocketConnection {
     @Getter
     @Setter
     protected boolean encrypted = false;
+
     /**
      * The connection's session code
      * -- GETTER --
@@ -207,6 +223,7 @@ public class SocketConnection {
     @Getter
     @Setter
     protected String sessionCode;
+
     /**
      * The connection and server's shared secret
      * -- GETTER --
@@ -220,6 +237,7 @@ public class SocketConnection {
     @Getter
     @Setter
     protected SecretKey sharedSecret;
+
     /**
      * The connection's encryption key pair
      * -- GETTER --
@@ -233,6 +251,7 @@ public class SocketConnection {
     @Getter
     @Setter
     protected KeyPair keyPair;
+
     /**
      * The connection's encryption cipher
      * -- GETTER --
@@ -260,6 +279,7 @@ public class SocketConnection {
     @Getter
     @Setter
     protected Cipher decryptCipher;
+
     /**
      * The connection's verification token
      * -- GETTER --
@@ -273,6 +293,7 @@ public class SocketConnection {
     @Getter
     @Setter
     protected byte[] verifyToken;
+
     /**
      * The connection's session hash
      * -- GETTER --
@@ -299,7 +320,7 @@ public class SocketConnection {
     protected Player player;
 
     public SocketConnection(SocketManager main, Socket sock)
-            throws IOException {
+        throws IOException {
         this.socketManager = main;
         this.sock = sock;
 
@@ -312,13 +333,15 @@ public class SocketConnection {
 
         this.socketManager.server.getPool().execute(this::startClosedChecker);
 
-        main.server.getPool().execute(() -> {
-            try {
-                startPacketReader();
-            } catch (IOException e) {
-                main.server.getLogger().printStackTrace(e);
-            }
-        });
+        main.server
+            .getPool()
+            .execute(() -> {
+                try {
+                    startPacketReader();
+                } catch (IOException e) {
+                    main.server.getLogger().printStackTrace(e);
+                }
+            });
     }
 
     /**
@@ -328,8 +351,8 @@ public class SocketConnection {
      */
     public boolean isTimedOut() {
         return this.state == ConnectionState.PLAY
-                ? this.lastKeepaliveReceived <= (System.currentTimeMillis() - 30000)
-                : lastPacketReceived <= (System.currentTimeMillis() - 10000);
+            ? this.lastKeepaliveReceived <= (System.currentTimeMillis() - 30000)
+            : lastPacketReceived <= (System.currentTimeMillis() - 10000);
     }
 
     /**
@@ -338,19 +361,28 @@ public class SocketConnection {
     public void startClosedChecker() {
         while (!this.closed) {
             try {
-                await().until(() -> this.in == null || (this.isTimedOut() && this.in.available() <= 0) || this.out == null || this.sock == null || this.sock.isClosed() || this.closed);
+                await()
+                    .until(() ->
+                        this.in == null ||
+                        (this.isTimedOut() && this.in.available() <= 0) ||
+                        this.out == null ||
+                        this.sock == null ||
+                        this.sock.isClosed() ||
+                        this.closed
+                    );
                 if (this.closed) Thread.currentThread().interrupt();
-                ;
-
                 if ((this.isTimedOut() && this.in.available() <= 0)) {
-                    this.disconnect(Component.text("Keepalive timeout").color(NamedTextColor.RED));
+                    this.disconnect(
+                            Component
+                                .text("Keepalive timeout")
+                                .color(NamedTextColor.RED)
+                        );
                 } else {
                     break;
                 }
             } catch (IOException e) {
                 this.socketManager.server.getLogger().printStackTrace(e);
-            } catch (ConditionTimeoutException ignored) {
-            }
+            } catch (ConditionTimeoutException ignored) {}
         }
         Thread.currentThread().interrupt();
     }
@@ -408,9 +440,22 @@ public class SocketConnection {
 
         if (dataOutput != null) {
             byte[] loggedSent = dataOutput.toByteArray();
-            socketManager.server.getLogger().debug("SENDING", this.encrypted ? "encrypted" : "not encrypted", String.valueOf(this.state), p.name, Integer.toString(loggedSent.length + 1), Integer.toString(p.id), Arrays.toString(loggedSent));
+            socketManager.server
+                .getLogger()
+                .debug(
+                    "SENDING",
+                    this.encrypted ? "encrypted" : "not encrypted",
+                    String.valueOf(this.state),
+                    p.name,
+                    Integer.toString(loggedSent.length + 1),
+                    Integer.toString(p.id),
+                    Arrays.toString(loggedSent)
+                );
 
-            VarInt.writeVarInt(finalOutput, dataOutput.toByteArray().length + 1);
+            VarInt.writeVarInt(
+                finalOutput,
+                dataOutput.toByteArray().length + 1
+            );
             VarInt.writeVarInt(finalOutput, p.id);
             finalOutput.write(dataOutput.toByteArray());
 
@@ -420,12 +465,24 @@ public class SocketConnection {
             try {
                 out.flush();
             } catch (SocketException e) {
-                if (e.getMessage().toLowerCase().contains("closed") || e.getMessage().toLowerCase().contains("aborted"))
-                    this.close();
-                else this.socketManager.server.getLogger().printStackTrace(e);
+                if (
+                    e.getMessage().toLowerCase().contains("closed") ||
+                    e.getMessage().toLowerCase().contains("aborted")
+                ) this.close(); else this.socketManager.server.getLogger()
+                    .printStackTrace(e);
             }
 
-            socketManager.server.getLogger().debug("SENT", this.encrypted ? "encrypted" : "not encrypted", String.valueOf(this.state), p.name, Integer.toString(sent.length - 1), Integer.toString(p.id), Arrays.toString(sent));
+            socketManager.server
+                .getLogger()
+                .debug(
+                    "SENT",
+                    this.encrypted ? "encrypted" : "not encrypted",
+                    String.valueOf(this.state),
+                    p.name,
+                    Integer.toString(sent.length - 1),
+                    Integer.toString(p.id),
+                    Arrays.toString(sent)
+                );
 
             PacketSentEvent sentEvent = new PacketSentEvent(p, dataOutput);
             p.postSend(sentEvent);
@@ -466,9 +523,9 @@ public class SocketConnection {
             } catch (ConditionTimeoutException e) {
                 continue;
             }
-            if (this.in == null || this.closed || this.sock.isClosed()) Thread.currentThread().interrupt();
-            ;
-
+            if (this.in == null || this.closed || this.sock.isClosed()) Thread
+                .currentThread()
+                .interrupt();
             while (this.in != null && this.in.available() > 0) {
                 // note that all bytes read here are automatically decrypted if needed as the underlying input stream used by the DataInputStream
                 // is the custom FlexibleInputStream which may have encryption/decryption enabled.
@@ -478,32 +535,47 @@ public class SocketConnection {
                 byte[] data = new byte[len - 1];
 
                 for (int i = 0; i < len - 1; i++) {
-                    if (this.closed)
-                        Thread.currentThread().interrupt();
-                    ;
+                    if (this.closed) Thread.currentThread().interrupt();
                     try {
                         data[i] = this.in.readByte();
                     } catch (EOFException e) {
                         break;
                     }
                 }
-                if (this.closed)
-                    Thread.currentThread().interrupt();
-                ;
-
+                if (this.closed) Thread.currentThread().interrupt();
                 this.lastPacketReceived = System.currentTimeMillis();
 
                 BasePacket packet;
+
                 try {
                     packet = PacketTranslator.identify(id, this);
-                } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | InstantiationException e) {
-                    disconnect(Component.text(e.getMessage()).color(NamedTextColor.RED));
+                } catch (
+                    InvocationTargetException
+                    | NoSuchMethodException
+                    | IllegalAccessException
+                    | InstantiationException e
+                ) {
+                    disconnect(
+                        Component.text(e.getMessage()).color(NamedTextColor.RED)
+                    );
                     return;
                 }
-                this.socketManager.server.getLogger().debug("RECEIVED", this.encrypted ? "encrypted" : "not encrypted", packet.name, String.valueOf(state), Integer.toString(len), Integer.toString(id), Arrays.toString(data));
-
+                this.socketManager.server.getLogger()
+                    .debug(
+                        "RECEIVED",
+                        this.encrypted ? "encrypted" : "not encrypted",
+                        packet.name,
+                        String.valueOf(state),
+                        Integer.toString(len),
+                        Integer.toString(id),
+                        Arrays.toString(data)
+                    );
                 if (packet.type == PacketType.UNKNOWN) {
-                    disconnect(Component.text("Unknown packet received").color(NamedTextColor.RED));
+                    disconnect(
+                        Component
+                            .text("Unknown packet received")
+                            .color(NamedTextColor.RED)
+                    );
                     break;
                 }
 
@@ -512,14 +584,15 @@ public class SocketConnection {
                 try {
                     packet.process(len, input);
                 } catch (IOException e) {
-                    disconnect(Component.text(e.getMessage()).color(NamedTextColor.RED));
+                    disconnect(
+                        Component.text(e.getMessage()).color(NamedTextColor.RED)
+                    );
                     this.socketManager.server.getLogger().printStackTrace(e);
                     break;
                 }
             }
 
             if (this.closed) Thread.currentThread().interrupt();
-            ;
         }
         Thread.currentThread().interrupt();
     }
@@ -530,7 +603,10 @@ public class SocketConnection {
      * @param state the new state.
      */
     public void setState(ConnectionState state) {
-        if (this.state == ConnectionState.HANDSHAKE && state == ConnectionState.LOGIN) {
+        if (
+            this.state == ConnectionState.HANDSHAKE &&
+            state == ConnectionState.LOGIN
+        ) {
             this.player = new Player(this);
         }
 

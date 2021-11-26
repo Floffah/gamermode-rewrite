@@ -23,7 +23,11 @@ public enum AllServerBoundPackets {
     public ConnectionState state;
     public Class<? extends BasePacket> packet;
 
-    AllServerBoundPackets(int id, ConnectionState state, Class<? extends BasePacket> packet) {
+    AllServerBoundPackets(
+        int id,
+        ConnectionState state,
+        Class<? extends BasePacket> packet
+    ) {
         this.id = id;
         this.state = state;
         this.packet = packet;

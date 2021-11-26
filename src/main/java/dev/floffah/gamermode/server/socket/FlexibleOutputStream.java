@@ -1,13 +1,13 @@
 package dev.floffah.gamermode.server.socket;
 
-import org.jetbrains.annotations.NotNull;
-
-import javax.crypto.Cipher;
-import javax.crypto.CipherOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import javax.crypto.Cipher;
+import javax.crypto.CipherOutputStream;
+import org.jetbrains.annotations.NotNull;
 
 public class FlexibleOutputStream extends OutputStream {
+
     OutputStream out;
     CipherOutputStream cout;
     boolean encrypted = false;

@@ -8,8 +8,6 @@ import dev.floffah.gamermode.server.cache.CacheProvider;
 import dev.floffah.gamermode.server.socket.SocketManager;
 import dev.floffah.gamermode.visual.GuiWindow;
 import dev.floffah.gamermode.visual.Logger;
-import lombok.Getter;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -21,6 +19,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import lombok.Getter;
 
 public class Server {
 
@@ -35,6 +34,7 @@ public class Server {
      */
     @Getter
     protected Logger logger;
+
     /**
      * The GUI window
      * -- GETTER --
@@ -54,6 +54,7 @@ public class Server {
      */
     @Getter
     protected List<String> args;
+
     /**
      * Whether the server is in debug mode or not
      * -- GETTER --
@@ -63,6 +64,7 @@ public class Server {
      */
     @Getter
     protected boolean debugMode;
+
     /**
      * The server's configuration
      * -- GETTER --
@@ -72,6 +74,7 @@ public class Server {
      */
     @Getter
     protected Config config;
+
     /**
      * The server's running/root directory
      * -- GETTER --
@@ -81,6 +84,7 @@ public class Server {
      */
     @Getter
     protected String rootDir;
+
     /**
      * The directory the server stores its data in
      * -- GETTER --
@@ -90,6 +94,7 @@ public class Server {
      */
     @Getter
     protected Path dataDir;
+
     /**
      * The server's event emitter
      * -- GETTER --
@@ -99,6 +104,7 @@ public class Server {
      */
     @Getter
     protected EventEmitter events;
+
     /**
      * The server's cache provider
      * -- GETTER --
@@ -108,6 +114,7 @@ public class Server {
      */
     @Getter
     protected CacheProvider cache;
+
     /**
      * The server's main thread pool
      * -- GETTER --
@@ -117,6 +124,7 @@ public class Server {
      */
     @Getter
     protected ExecutorService pool;
+
     /**
      * The server's scheduled thread pool
      * -- GETTER --
@@ -126,6 +134,7 @@ public class Server {
      */
     @Getter
     protected ScheduledExecutorService scheduler;
+
     /**
      * The server's small task thread pool.
      * Only use the task pool for quick and short tasks. For anything else, use the thread pool or the scheduled pool.
@@ -137,6 +146,7 @@ public class Server {
      */
     @Getter
     protected ExecutorService taskPool;
+
     /**
      * The server's key pair generator
      * -- GETTER --
@@ -146,6 +156,7 @@ public class Server {
      */
     @Getter
     protected KeyPairGenerator keyPairGenerator;
+
     /**
      * The server's socket manager
      * -- GETTER --
@@ -155,6 +166,7 @@ public class Server {
      */
     @Getter
     protected SocketManager sock;
+
     /**
      * The server's protocol version
      * -- GETTER --
@@ -164,6 +176,7 @@ public class Server {
      */
     @Getter
     protected int protocolVersion = 756;
+
     /**
      * The server's id
      * -- GETTER --
@@ -173,6 +186,7 @@ public class Server {
      */
     @Getter
     protected String serverId = "GamerModeServer";
+
     /**
      * The server's brand
      * -- GETTER --
@@ -182,6 +196,7 @@ public class Server {
      */
     @Getter
     protected String serverBrand = "GamerMode";
+
     ObjectMapper om;
     File configFile;
 
@@ -202,13 +217,14 @@ public class Server {
         this.gui = GuiWindow.start(this);
 
         // info
-        this.getLogger().info(
+        this.getLogger()
+            .info(
                 String.format(
-                        "Running on Java version %s on %s",
-                        System.getProperty("java.version"),
-                        System.getProperty("os.name")
+                    "Running on Java version %s on %s",
+                    System.getProperty("java.version"),
+                    System.getProperty("os.name")
                 )
-        );
+            );
 
         // events
         this.events = new EventEmitter(this);
@@ -221,17 +237,17 @@ public class Server {
                 this.rootDir = System.getProperty("user.dir");
             } else {
                 this.rootDir =
-                        Paths
-                                .get(
-                                        getClass()
-                                                .getProtectionDomain()
-                                                .getCodeSource()
-                                                .getLocation()
-                                                .toURI()
-                                )
-                                .getParent()
-                                .toUri()
-                                .getPath();
+                    Paths
+                        .get(
+                            getClass()
+                                .getProtectionDomain()
+                                .getCodeSource()
+                                .getLocation()
+                                .toURI()
+                        )
+                        .getParent()
+                        .toUri()
+                        .getPath();
             }
             // create or load config
             this.configFile = Path.of(this.rootDir, "config.yml").toFile();
@@ -251,11 +267,11 @@ public class Server {
 
         // threading
         this.pool =
-                Executors.newFixedThreadPool(this.config.performance.poolSize);
+            Executors.newFixedThreadPool(this.config.performance.poolSize);
         this.scheduler =
-                Executors.newScheduledThreadPool(
-                        this.config.performance.scheduledPoolSize
-                );
+            Executors.newScheduledThreadPool(
+                this.config.performance.scheduledPoolSize
+            );
         this.taskPool = Executors.newCachedThreadPool();
 
         // cache

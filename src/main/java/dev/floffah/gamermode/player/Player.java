@@ -1,10 +1,9 @@
 package dev.floffah.gamermode.player;
 
 import dev.floffah.gamermode.server.socket.SocketConnection;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.UUID;
 
 public class Player {
 

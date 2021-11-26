@@ -6,10 +6,10 @@ import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.socket.ConnectionState;
 import dev.floffah.gamermode.util.Strings;
 import dev.floffah.gamermode.util.VarInt;
-
 import java.io.IOException;
 
 public class Handshake extends BasePacket {
+
     public Handshake() {
         super("ServerListHandshake", 0x00, PacketType.SERVERBOUND);
     }

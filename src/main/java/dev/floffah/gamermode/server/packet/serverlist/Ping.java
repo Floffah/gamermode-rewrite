@@ -3,10 +3,10 @@ package dev.floffah.gamermode.server.packet.serverlist;
 import com.google.common.io.ByteArrayDataInput;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
-
 import java.io.IOException;
 
 public class Ping extends BasePacket {
+
     public Ping() {
         super("ServerListPing", 0x01, PacketType.SERVERBOUND);
     }

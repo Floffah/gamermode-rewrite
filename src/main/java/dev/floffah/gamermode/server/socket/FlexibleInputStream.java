@@ -1,14 +1,14 @@
 package dev.floffah.gamermode.server.socket;
 
-import org.jetbrains.annotations.NotNull;
-
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import org.jetbrains.annotations.NotNull;
 
 public class FlexibleInputStream extends InputStream {
+
     InputStream in;
     CipherInputStream cin;
     boolean decrypting = false;

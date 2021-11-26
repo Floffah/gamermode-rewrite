@@ -6,13 +6,13 @@ import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.socket.ConnectionState;
 import dev.floffah.gamermode.util.Strings;
-
 import java.io.IOException;
 
 /**
  * Outgoing login packet for notifying the client that the login was a success
  */
 public class LoginSuccess extends BasePacket {
+
     /**
      * Construct a LoginSuccess packet
      */

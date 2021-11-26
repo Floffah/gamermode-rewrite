@@ -2,7 +2,6 @@ package dev.floffah.gamermode.server.socket;
 
 import dev.floffah.gamermode.server.Server;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -11,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SocketManager {
+
     public ServerSocket sock;
     public List<SocketConnection> connections = new LinkedList<>();
 
@@ -36,7 +36,8 @@ public class SocketManager {
     public void start() throws IOException {
         this.sock = new ServerSocket(this.server.getConfig().info.port);
         this.listen();
-        this.server.getLogger().info("Listening on " + sock.getLocalSocketAddress().toString());
+        this.server.getLogger()
+            .info("Listening on " + sock.getLocalSocketAddress().toString());
     }
 
     /**
@@ -48,14 +49,21 @@ public class SocketManager {
                 try {
                     this.server.getLogger().debug("Waiting for connection...");
                     Socket csock = this.sock.accept();
-                    this.server.getLogger().info("New connection from" + csock.getRemoteSocketAddress().toString());
-                    this.server.getTaskPool().execute(() -> {
-                        try {
-                            this.connections.add(new SocketConnection(this, csock));
-                        } catch (IOException e) {
-                            this.server.getLogger().printStackTrace(e);
-                        }
-                    });
+                    this.server.getLogger()
+                        .info(
+                            "New connection from" +
+                                csock.getRemoteSocketAddress().toString()
+                        );
+                    this.server.getTaskPool()
+                        .execute(() -> {
+                            try {
+                                this.connections.add(
+                                    new SocketConnection(this, csock)
+                                );
+                            } catch (IOException e) {
+                                this.server.getLogger().printStackTrace(e);
+                            }
+                        });
                 } catch (IOException e) {
                     this.server.getLogger().printStackTrace(e);
                 }

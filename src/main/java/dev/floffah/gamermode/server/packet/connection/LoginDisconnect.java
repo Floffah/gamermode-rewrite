@@ -5,16 +5,16 @@ import com.google.common.io.ByteStreams;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.util.Strings;
+import java.io.IOException;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-
-import java.io.IOException;
 
 /**
  * Outgoing login packet for disconnecting the user
  */
 public class LoginDisconnect extends BasePacket {
+
     /**
      * Reason for the disconnect
      */

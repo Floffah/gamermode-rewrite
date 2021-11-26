@@ -1,17 +1,17 @@
 package dev.floffah.gamermode.visual;
 
 import dev.floffah.gamermode.server.Server;
-
-import javax.swing.*;
-import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
+import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 
 public class GuiWindow {
+
     public boolean loaded = false;
     Server main;
     JFrame frame;
@@ -32,7 +32,13 @@ public class GuiWindow {
      */
     public static GuiWindow start(Server main) {
         boolean isDoubleClick = check();
-        if ((isDoubleClick || (main.getArgs().contains("-gui")) && !main.getArgs().contains("-nogui"))) {
+        if (
+            (
+                isDoubleClick ||
+                (main.getArgs().contains("-gui")) &&
+                !main.getArgs().contains("-nogui")
+            )
+        ) {
             try {
                 return create(main);
             } catch (IOException e) {
@@ -81,7 +87,9 @@ public class GuiWindow {
 
         Font font;
         try {
-            InputStream fonts = getClass().getClassLoader().getResourceAsStream("JetBrainsMono-Regular.ttf");
+            InputStream fonts = getClass()
+                .getClassLoader()
+                .getResourceAsStream("JetBrainsMono-Regular.ttf");
             if (fonts == null) {
                 main.getLogger().info("Does not exist");
                 main.shutdown();
@@ -101,15 +109,17 @@ public class GuiWindow {
         frame.add(new JScrollPane(text));
         frame.setResizable(true);
         frame.setMinimumSize(new Dimension(700, 500));
-        frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                try {
-                    main.shutdown();
-                } catch (IOException ioException) {
-                    main.getLogger().printStackTrace(ioException);
+        frame.addWindowListener(
+            new WindowAdapter() {
+                public void windowClosing(WindowEvent e) {
+                    try {
+                        main.shutdown();
+                    } catch (IOException ioException) {
+                        main.getLogger().printStackTrace(ioException);
+                    }
                 }
             }
-        });
+        );
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         frame.pack();

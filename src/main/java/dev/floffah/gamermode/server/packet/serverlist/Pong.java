@@ -5,10 +5,10 @@ import com.google.common.io.ByteStreams;
 import dev.floffah.gamermode.events.network.PacketSentEvent;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
-
 import java.io.IOException;
 
 public class Pong extends BasePacket {
+
     long payload;
 
     public Pong(long payload) {

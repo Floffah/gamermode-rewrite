@@ -1,11 +1,11 @@
 package dev.floffah.gamermode.visual;
 
 import dev.floffah.gamermode.server.Server;
+import java.sql.Timestamp;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import java.sql.Timestamp;
-
 public class Logger {
+
     public static Logger inst;
 
     Server main;
@@ -99,7 +99,12 @@ public class Logger {
      * @return The log format
      */
     String getFormat(String type) {
-        return String.format("[%s] [%s] [%s]: ", new Timestamp(System.currentTimeMillis()), Thread.currentThread().getName(), type);
+        return String.format(
+            "[%s] [%s] [%s]: ",
+            new Timestamp(System.currentTimeMillis()),
+            Thread.currentThread().getName(),
+            type
+        );
     }
 
     /**
@@ -124,4 +129,3 @@ public class Logger {
         if (dosout) System.out.print(message);
     }
 }
-
