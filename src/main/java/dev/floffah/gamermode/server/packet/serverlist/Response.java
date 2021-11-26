@@ -6,6 +6,7 @@ import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.util.Strings;
 import java.io.IOException;
+import java.util.UUID;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
@@ -64,7 +65,7 @@ public class Response extends BasePacket {
                 .put(
                     "name",
                     LegacyComponentSerializer
-                        .legacy('§')
+                        .legacySection()
                         .serialize(
                             Component
                                 .text(
@@ -73,8 +74,9 @@ public class Response extends BasePacket {
                                 .color(NamedTextColor.RED)
                         )
                 )
+                .put("id", new UUID(0, 0).toString())
         );
-        json.put("sample", sample);
+        players.put("sample", sample);
 
         JSONObject description = new JSONObject(
             GsonComponentSerializer
