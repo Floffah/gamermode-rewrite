@@ -4,10 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import dev.floffah.gamermode.config.Config;
 import dev.floffah.gamermode.events.EventEmitter;
+import dev.floffah.gamermode.player.Player;
 import dev.floffah.gamermode.server.cache.CacheProvider;
+import dev.floffah.gamermode.server.socket.SocketConnection;
 import dev.floffah.gamermode.server.socket.SocketManager;
 import dev.floffah.gamermode.visual.GuiWindow;
 import dev.floffah.gamermode.visual.Logger;
+import dev.floffah.gamermode.world.WorldManager;
+import lombok.Getter;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -15,13 +21,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-
-import dev.floffah.gamermode.world.WorldManager;
-import lombok.Getter;
 
 public class Server {
 
@@ -209,6 +213,16 @@ public class Server {
     @Getter
     protected String serverBrand = "GamerMode";
 
+    /**
+     * All online players
+     * -- GETTER --
+     * Get all online players
+     *
+     * @return All online players
+     */
+    @Getter
+    protected List<Player> players = new ArrayList<>();
+
     ObjectMapper om;
     File configFile;
     private int latestEntityID = Integer.MIN_VALUE;
@@ -247,7 +261,8 @@ public class Server {
         try {
             // get root dir
             if (this.args.contains("-usewd")) {
-                this.rootDir = Paths.get(System.getProperty("user.dir")).toFile();
+                this.rootDir =
+                    Paths.get(System.getProperty("user.dir")).toFile();
             } else {
                 this.rootDir =
                     Paths
@@ -258,10 +273,12 @@ public class Server {
                                 .getLocation()
                                 .toURI()
                         )
-                        .getParent().toFile();
+                        .getParent()
+                        .toFile();
             }
             // create or load config
-            this.configFile = Path.of(this.rootDir.getPath(), "config.yml").toFile();
+            this.configFile =
+                Path.of(this.rootDir.getPath(), "config.yml").toFile();
             if (!configFile.exists()) {
                 this.config = new Config();
                 saveConfig();
@@ -309,7 +326,9 @@ public class Server {
     }
 
     public int getNextEntityID() {
-        if (this.latestEntityID == Integer.MAX_VALUE) return latestEntityID = Integer.MIN_VALUE;
+        if (this.latestEntityID == Integer.MAX_VALUE) return (
+            latestEntityID = Integer.MIN_VALUE
+        );
         return latestEntityID++;
     }
 
@@ -354,6 +373,13 @@ public class Server {
      */
     public void shutdown(int status) throws IOException {
         this.getLogger().info("Goodbye!");
+
+        for (SocketConnection connection : this.sock.getConnections()) {
+            connection.disconnect(LegacyComponentSerializer.legacyAmpersand().deserialize(this.getConfig().messages.shutDownMessage));
+            this.sock.disposeConnection(connection);
+        }
+
+        this.saveConfig();
 
         this.gui.stop();
         System.exit(status);

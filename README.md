@@ -17,6 +17,12 @@ prettier plugin doesn't support java files even when added to the regex.
     - This was mainly motivated by laziness and that I thought it might be better to use something more fleshed out,
       stable, and known in the community and ended up going with KyoriPowered's Adventure
 
+## Helpful links for implementation
+
+ - [Wiki.vg](https://wiki.vg/Main_Page)
+ - [HexEd.it](https://www.hexed.it/)
+ - [UUID hex to m&l long to int array](https://www.soltoder.com/mc-uuid-converter/)
+
 ## Implemented
 
 A list of everything that has been implemented so far

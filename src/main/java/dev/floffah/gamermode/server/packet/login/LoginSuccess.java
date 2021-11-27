@@ -5,7 +5,7 @@ import com.google.common.io.ByteStreams;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.socket.ConnectionState;
-import dev.floffah.gamermode.util.Strings;
+import dev.floffah.gamermode.util.StringUtil;
 import java.io.IOException;
 
 /**
@@ -27,8 +27,9 @@ public class LoginSuccess extends BasePacket {
         out.writeLong(conn.getPlayer().getUniqueId().getMostSignificantBits());
         out.writeLong(conn.getPlayer().getUniqueId().getLeastSignificantBits());
 
-        Strings.writeUTF(conn.getPlayer().getUsername(), out);
+        StringUtil.writeUTF(conn.getPlayer().getUsername(), out);
 
+        this.conn.setLastKeepaliveReceived(System.currentTimeMillis());
         conn.setState(ConnectionState.PLAY);
 
         return out;

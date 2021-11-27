@@ -4,8 +4,8 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
-import dev.floffah.gamermode.util.Strings;
-import dev.floffah.gamermode.util.VarInt;
+import dev.floffah.gamermode.util.StringUtil;
+import dev.floffah.gamermode.util.VarIntUtil;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -22,7 +22,7 @@ public class EncryptionRequest extends BasePacket {
     public ByteArrayDataOutput buildOutput() throws IOException {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
-        Strings.writeUTF(
+        StringUtil.writeUTF(
             this.conn.getSocketManager().getServer().getServerId(),
             out
         );
@@ -35,14 +35,14 @@ public class EncryptionRequest extends BasePacket {
                     .generateKeyPair()
             );
             byte[] publicKey = conn.getKeyPair().getPublic().getEncoded();
-            VarInt.writeVarInt(out, publicKey.length);
+            VarIntUtil.writeVarInt(out, publicKey.length);
             out.write(publicKey);
 
             byte[] verifyToken = new byte[5];
             SecureRandom.getInstanceStrong().nextBytes(verifyToken);
             conn.setVerifyToken(verifyToken);
 
-            VarInt.writeVarInt(out, verifyToken.length);
+            VarIntUtil.writeVarInt(out, verifyToken.length);
             out.write(verifyToken);
         } catch (NoSuchAlgorithmException e) {
             conn.getSocketManager().getServer().getLogger().printStackTrace(e);

@@ -10,8 +10,24 @@ import lombok.Getter;
 
 public class SocketManager {
 
-    public ServerSocket sock;
-    public List<SocketConnection> connections = new LinkedList<>();
+    /**
+     * The physical server socket
+     * -- GETTER --
+     * Get the physical server socket
+     *
+     * @return The physical server socket
+     */
+    @Getter
+    protected ServerSocket sock;
+    /**
+     * The list of connected sockets
+     * -- GETTER --
+     * Get the list of connected sockets
+     *
+     * @return The list of connected sockets
+     */
+    @Getter
+    protected List<SocketConnection> connections = new LinkedList<>();
 
     /**
      * Get the server instance
@@ -80,6 +96,7 @@ public class SocketManager {
      */
     public void disposeConnection(SocketConnection conn) throws IOException {
         this.connections.remove(conn);
+        if (!conn.closed) conn.close();
         if (conn.sock != null && !conn.sock.isClosed()) conn.sock.close();
         conn = null;
     }

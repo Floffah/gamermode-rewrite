@@ -6,7 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class VarInt {
+public class VarIntUtil {
 
     // modified from https://wiki.vg/Protocol#VarInt_and_VarLong
     public static int readVarInt(DataInputStream in) throws IOException {

@@ -1,6 +1,7 @@
 package dev.floffah.gamermode.player;
 
 import dev.floffah.gamermode.error.UUIDMismatchException;
+import dev.floffah.gamermode.util.UUIDUtil;
 import dev.floffah.gamermode.world.WorldManager;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class Profile {
     }
 
     public void doHasJoined() throws IOException, UUIDMismatchException {
+        // session server stuff
         URL joinUrl = new URL(
             sessionhasJoinedURL +
             "?username=" +
@@ -70,6 +72,8 @@ public class Profile {
             unformattedUUID.substring(20, 32);
         this.player.uniqueId = UUID.fromString(formattedUUID);
 
+        // read the player's data
+
         if (
             !this.player.username.equals(response.getString("name"))
         ) this.player.username = response.getString("name");
@@ -87,17 +91,35 @@ public class Profile {
             );
 
             int[] uuidInts = ((IntArrayTag) rawdata.get("UUID")).getValue();
+            UUID uuid = UUIDUtil.intArrayToUUID(uuidInts);
 
-            int uuidMostA = uuidInts[0];
-            int uuidMostB = uuidInts[1];
-            int uuidLeastA = uuidInts[2];
-            int uuidLeastB = uuidInts[3];
-            long uuidMost = (long) uuidMostA << 32 | uuidMostB & 0xFFFFFFFFL;
-            long uuidLeast = (long) uuidLeastA << 32 | uuidLeastB & 0xFFFFFFFFL;
+            if (
+                !this.getPlayer().getUniqueId().equals(uuid)
+            ) throw new UUIDMismatchException();
 
-            UUID uuid = new UUID(uuidMost, uuidLeast);
-
-            if (!this.getPlayer().getUniqueId().equals(uuid)) throw new UUIDMismatchException();
+            if (rawdata.containsKey("previousPlayerGameType")) {
+                this.getPlayer().previousGameMode =
+                    rawdata.getByte("previousPlayerGameType");
+            }
+            if (
+                this.getPlayer()
+                    .getConn()
+                    .getSocketManager()
+                    .getServer()
+                    .getConfig()
+                    .worlds.enforceDefaultGamemode ||
+                !rawdata.containsKey("playerGameType")
+            ) {
+                this.getPlayer().gameMode =
+                    this.getPlayer()
+                        .getConn()
+                        .getSocketManager()
+                        .getServer()
+                        .getConfig()
+                        .worlds.defaultGamemode;
+            } else {
+                this.getPlayer().gameMode = rawdata.getByte("playerGameType");
+            }
         }
 
         wm.writeRawPlayerData(this.getPlayer());

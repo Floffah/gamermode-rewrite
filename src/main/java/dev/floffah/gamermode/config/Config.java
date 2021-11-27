@@ -18,6 +18,10 @@ public class Config {
      * Performance settings
      */
     public Performance performance = new Performance();
+    /**
+     * Message settings
+     */
+    public Messages messages = new Messages();
 
     /**
      * Player related settings
@@ -40,15 +44,6 @@ public class Config {
          */
         public String motd = "Minecraft server";
         /**
-         * The server's difficulty<br/>
-         * 0 - peaceful<br/>
-         * 1 - easy<br/>
-         * 2 - normal<br/>
-         * 3 - hard<br/>
-         */
-        public byte difficulty = 1;
-        public boolean isHardcore = false;
-        /**
          * Server port to listen on
          */
         public int port = 25565;
@@ -67,6 +62,26 @@ public class Config {
          * Forced render distance. Between 8 and 12 is good for the best performance while still being playable
          */
         public int renderDistance = 8;
+        /**
+         * The server's difficulty<br/>
+         * 0 - peaceful<br/>
+         * 1 - easy<br/>
+         * 2 - normal<br/>
+         * 3 - hard<br/>
+         */
+        public byte difficulty = 1;
+        /**
+         * If the server is in hardcore mode
+         */
+        public boolean isHardcore = false;
+        /**
+         * The default gamemode applied to new players
+         */
+        public int defaultGamemode = 0;
+        /**
+         * Whether to change a player's gamemode when they join
+         */
+        public boolean enforceDefaultGamemode = false;
     }
 
     /**
@@ -82,5 +97,15 @@ public class Config {
          * Size of the scheduler thread pool
          */
         public int scheduledPoolSize = 10;
+    }
+
+    /**
+     * Message settings
+     */
+    public static class Messages {
+        /**
+         * Message displayed when a player joins the server
+         */
+        public String shutDownMessage = "&cServer shutting down.";
     }
 }

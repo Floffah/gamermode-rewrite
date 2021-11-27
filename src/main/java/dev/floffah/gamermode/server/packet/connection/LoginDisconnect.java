@@ -4,11 +4,10 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
-import dev.floffah.gamermode.util.Strings;
+import dev.floffah.gamermode.util.StringUtil;
 import java.io.IOException;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 /**
  * Outgoing login packet for disconnecting the user
@@ -34,7 +33,7 @@ public class LoginDisconnect extends BasePacket {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
         String message = GsonComponentSerializer.gson().serialize(chat);
-        Strings.writeUTF(message, out);
+        StringUtil.writeUTF(message, out);
 
         return out;
     }

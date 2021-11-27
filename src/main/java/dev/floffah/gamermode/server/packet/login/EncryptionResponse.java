@@ -2,10 +2,9 @@ package dev.floffah.gamermode.server.packet.login;
 
 import com.google.common.io.ByteArrayDataInput;
 import dev.floffah.gamermode.error.UUIDMismatchException;
-import dev.floffah.gamermode.events.network.PacketSentEvent;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
-import dev.floffah.gamermode.util.VarInt;
+import dev.floffah.gamermode.util.VarIntUtil;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -41,12 +40,12 @@ public class EncryptionResponse extends BasePacket {
         Cipher tempCipher;
 
         // read the shared secret
-        int sharedSecretLength = VarInt.readVarInt(in);
+        int sharedSecretLength = VarIntUtil.readVarInt(in);
         byte[] sharedSecret = new byte[sharedSecretLength];
         in.readFully(sharedSecret, 0, sharedSecretLength);
 
         // read the verify token
-        int verifyTokenLength = VarInt.readVarInt(in);
+        int verifyTokenLength = VarIntUtil.readVarInt(in);
         byte[] verifyToken = new byte[verifyTokenLength];
         in.readFully(verifyToken, 0, verifyTokenLength);
 
@@ -195,8 +194,8 @@ public class EncryptionResponse extends BasePacket {
                 .getLogger()
                 .printStackTrace(e);
             this.conn.disconnect(
-                Component.text(e.getMessage()).color(NamedTextColor.RED)
-            );
+                    Component.text(e.getMessage()).color(NamedTextColor.RED)
+                );
             return;
         }
 

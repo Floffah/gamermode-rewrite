@@ -3,11 +3,16 @@ players:
   max: 20
 info:
   motd: "Minecraft server"
-  difficulty: 1
   port: 25565
 worlds:
   worldname: "world"
   renderDistance: 8
+  difficulty: 1
+  isHardcore: false
+  defaultGamemode: 0
+  enforceDefaultGamemode: false
 performance:
   poolSize: 10
   scheduledPoolSize: 10
+messages:
+  shutDownMessage: "&cServer shutting down."

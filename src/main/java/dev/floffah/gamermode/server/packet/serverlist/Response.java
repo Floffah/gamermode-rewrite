@@ -4,7 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
-import dev.floffah.gamermode.util.Strings;
+import dev.floffah.gamermode.util.StringUtil;
 import java.io.IOException;
 import java.util.UUID;
 import net.kyori.adventure.text.Component;
@@ -94,7 +94,7 @@ public class Response extends BasePacket {
         );
         json.put("description", description);
 
-        Strings.writeUTF(json.toString(), out);
+        StringUtil.writeUTF(json.toString(), out);
 
         return out;
     }

@@ -1,6 +1,6 @@
 package dev.floffah.gamermode.util;
 
-public class Bytes {
+public class ByteUtil {
 
     public static byte[] byteToArray(byte b) {
         byte[] ba = new byte[1];

@@ -3,6 +3,8 @@ package dev.floffah.gamermode.player;
 import dev.floffah.gamermode.entity.Entity;
 import dev.floffah.gamermode.server.socket.SocketConnection;
 import java.util.UUID;
+
+import dev.floffah.gamermode.world.World;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -58,11 +60,48 @@ public class Player implements Entity {
     @Getter
     protected int entityID;
 
+    /**
+     * The player's current gamemode
+     * -- GETTER --
+     * Get the player's current gamemode
+     *
+     * @return The player's current gamemode
+     * -- SETTER --
+     * Set the player's current gamemode
+     *
+     * @param mode The player's current gamemode
+     */
+    @Getter
+    @Setter
+    protected int gameMode;
+
+    /**
+     * the players previous game mode
+     * -- GETTER --
+     * Get the player's previous gamemode
+     *
+     * @return The player's previous gamemode
+     */
+    @Getter
+    protected int previousGameMode;
+
+    /**
+     * The player's current world
+     * -- GETTER --
+     * Get the player's current world
+     *
+     * @return The player's current world
+     */
+    @Getter
+    protected World world;
+
     public Player(SocketConnection conn) {
         this.conn = conn;
 
         this.profile = new Profile(this);
 
         this.entityID = conn.getSocketManager().getServer().getNextEntityID();
+        this.previousGameMode = this.conn.getSocketManager().getServer().getConfig().worlds.defaultGamemode;
+        this.world = this.getConn().getSocketManager().getServer().getWorldManager().getOverworld(); // temporarily
     }
 }

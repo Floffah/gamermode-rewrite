@@ -13,7 +13,7 @@ import dev.floffah.gamermode.server.packet.PacketTranslator;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.connection.Disconnect;
 import dev.floffah.gamermode.server.packet.connection.LoginDisconnect;
-import dev.floffah.gamermode.util.VarInt;
+import dev.floffah.gamermode.util.VarIntUtil;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -134,6 +134,7 @@ public class SocketConnection {
      * @return The last time in milliseconds that a keep alive packet was received.
      */
     @Getter
+    @Setter
     protected long lastKeepaliveReceived = 0;
 
     /**
@@ -154,7 +155,6 @@ public class SocketConnection {
      * @return The last time in milliseconds that a packet was received.
      */
     @Getter
-    @Setter
     protected long lastPacketReceived = System.currentTimeMillis();
 
     /**
@@ -452,11 +452,11 @@ public class SocketConnection {
                     Arrays.toString(loggedSent)
                 );
 
-            VarInt.writeVarInt(
+            VarIntUtil.writeVarInt(
                 finalOutput,
                 dataOutput.toByteArray().length + 1
             );
-            VarInt.writeVarInt(finalOutput, p.id);
+            VarIntUtil.writeVarInt(finalOutput, p.id);
             finalOutput.write(dataOutput.toByteArray());
 
             byte[] sent = finalOutput.toByteArray();
@@ -529,8 +529,8 @@ public class SocketConnection {
             while (this.in != null && this.in.available() > 0) {
                 // note that all bytes read here are automatically decrypted if needed as the underlying input stream used by the DataInputStream
                 // is the custom FlexibleInputStream which may have encryption/decryption enabled.
-                int len = VarInt.readVarInt(this.in);
-                int id = VarInt.readVarInt(this.in);
+                int len = VarIntUtil.readVarInt(this.in);
+                int id = VarIntUtil.readVarInt(this.in);
 
                 byte[] data = new byte[len - 1];
 
@@ -608,6 +608,7 @@ public class SocketConnection {
             state == ConnectionState.LOGIN
         ) {
             this.player = new Player(this);
+            this.getSocketManager().getServer().getPlayers().add(this.player);
         }
 
         this.state = state;
