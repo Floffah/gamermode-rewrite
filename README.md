@@ -56,3 +56,4 @@ A list of everything that has been implemented so far
 
 #### [Play State](https://wiki.vg/Protocol#Play)
 - [x] S->C 0x1A Disconnect - [class](./src/main/java/dev/floffah/gamermode/server/packet/connection/Disconnect.java), [protocol wiki](https://wiki.vg/Protocol#Disconnect_.28play.29)
+- [x] S->C 0x26 Join Game - [class](./src/main/java/dev/floffah/gamermode/server/packet/play/JoinGame.java), [protocol wiki](https://wiki.vg/Protocol#Join_Game)
