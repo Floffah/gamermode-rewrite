@@ -4,8 +4,8 @@ import com.google.common.io.ByteArrayDataInput;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.socket.ConnectionState;
-import dev.floffah.gamermode.util.StringUtil;
-import dev.floffah.gamermode.util.VarIntUtil;
+import dev.floffah.gamermode.datatype.util.StringUtil;
+import dev.floffah.gamermode.datatype.util.VarIntUtil;
 import java.io.IOException;
 
 public class Handshake extends BasePacket {

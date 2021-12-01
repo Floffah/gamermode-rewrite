@@ -1,18 +1,20 @@
 package dev.floffah.gamermode.world;
 
-import dev.floffah.gamermode.error.UUIDMismatchException;
 import dev.floffah.gamermode.player.Player;
-import dev.floffah.gamermode.util.UUIDUtil;
+import dev.floffah.gamermode.datatype.util.UUIDUtil;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
+import dev.floffah.gamermode.world.dimension.DimensionType;
 import lombok.Getter;
 import lombok.NonNull;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.io.NamedTag;
 import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.IntArrayTag;
 import org.jetbrains.annotations.Nullable;
 
 public class World {
@@ -129,6 +131,16 @@ public class World {
     @Getter
     protected MiscWorldData miscData;
 
+    /**
+     * The world's dimension types
+     * -- GETTER --
+     * Get the world's dimension types
+     *
+     * @return The world's dimension types
+     */
+    @Getter
+    protected List<DimensionType> dimTypes = new ArrayList<>();
+
     public World(WorldManager manager, WorldType type, String name) {
         this.worldManager = manager;
         this.name = name;
@@ -244,11 +256,7 @@ public class World {
      * @return The dimension type NBT
      */
     public CompoundTag buildDimType() {
-        CompoundTag data = new CompoundTag();
-
-        data.putByte("natural", (byte) 1);
-
-        return data;
+        return this.dimTypes.get(0).toNBT();
     }
 
     /**
@@ -257,12 +265,8 @@ public class World {
      */
     @Nullable
     public CompoundTag buildCavesDimType() {
-        if (this.type == WorldType.OVERWORLD) {
-            CompoundTag data = new CompoundTag();
-
-            data.putByte("natural", (byte) 1);
-
-            return data;
+        if (this.type == WorldType.OVERWORLD && this.dimTypes.size() > 1) {
+            return this.dimTypes.get(1).toNBT();
         }
 
         return null;

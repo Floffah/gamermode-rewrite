@@ -5,7 +5,7 @@ import com.google.common.io.ByteStreams;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.socket.ConnectionState;
-import dev.floffah.gamermode.util.StringUtil;
+import dev.floffah.gamermode.datatype.util.StringUtil;
 import java.io.IOException;
 
 /**

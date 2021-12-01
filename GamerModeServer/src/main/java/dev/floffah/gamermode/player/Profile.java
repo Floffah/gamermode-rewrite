@@ -1,7 +1,7 @@
 package dev.floffah.gamermode.player;
 
 import dev.floffah.gamermode.error.UUIDMismatchException;
-import dev.floffah.gamermode.util.UUIDUtil;
+import dev.floffah.gamermode.datatype.util.UUIDUtil;
 import dev.floffah.gamermode.world.WorldManager;
 import java.io.BufferedReader;
 import java.io.IOException;

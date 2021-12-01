@@ -1,4 +1,4 @@
-package dev.floffah.gamermode.util;
+package dev.floffah.gamermode.datatype.util;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;

@@ -1,4 +1,4 @@
-package dev.floffah.gamermode.util;
+package dev.floffah.gamermode.datatype.util;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -20,6 +20,7 @@ public class StringUtil {
 
     public static void writeUTF(String str, ByteArrayDataOutput out)
         throws IOException {
+        if (str == null) throw new NullPointerException();
         byte[] data = str.getBytes(StandardCharsets.UTF_8);
         VarIntUtil.writeVarInt(out, data.length);
         out.write(data);

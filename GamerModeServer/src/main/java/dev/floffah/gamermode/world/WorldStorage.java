@@ -3,7 +3,7 @@ package dev.floffah.gamermode.world;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import dev.floffah.gamermode.util.UUIDUtil;
+import dev.floffah.gamermode.datatype.util.UUIDUtil;
 import java.io.*;
 import java.nio.file.Path;
 import java.util.Random;

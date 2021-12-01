@@ -3,7 +3,7 @@ package dev.floffah.gamermode.server.packet.login;
 import com.google.common.io.ByteArrayDataInput;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
-import dev.floffah.gamermode.util.StringUtil;
+import dev.floffah.gamermode.datatype.util.StringUtil;
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 

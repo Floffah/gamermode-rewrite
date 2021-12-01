@@ -121,7 +121,7 @@ public class WorldManager {
 
         CompoundTag dimType = new CompoundTag();
 
-        dimType.putString("type", "minecraft:dimension_Type");
+        dimType.putString("type", "minecraft:dimension_type");
 
         ListTag<CompoundTag> dimRegistry = new ListTag<>(CompoundTag.class);
 

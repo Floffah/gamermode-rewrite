@@ -72,11 +72,21 @@ public class UUIDConvertPane extends JPanel {
     }
 
     public void updateValues() {
-        this.uuidArea.setText(
-                new UUID(this.uuidMostVal, this.uuidLeastVal).toString()
-            );
-        this.uuidMost.setText(Long.toString(this.uuidMostVal));
-        this.uuidLeast.setText(Long.toString(this.uuidLeastVal));
+        SwingUtilities.invokeLater(() -> {
+            String newUUIDString = new UUID(this.uuidMostVal, this.uuidLeastVal)
+                .toString();
+            if (
+                !this.uuidArea.getText().equals(newUUIDString)
+            ) this.uuidArea.setText(newUUIDString);
+            String newMostLong = Long.toString(this.uuidMostVal);
+            if (
+                !this.uuidMost.getText().equals(newMostLong)
+            ) this.uuidMost.setText(newMostLong);
+            String newLeastLong = Long.toString(this.uuidLeastVal);
+            if (
+                !this.uuidLeast.getText().equals(newLeastLong)
+            ) this.uuidLeast.setText(newLeastLong);
+        });
     }
 
     public DocumentListener createUUIDInputDocumentListener(
@@ -107,11 +117,14 @@ public class UUIDConvertPane extends JPanel {
                     val uuid = UUID.fromString(input.getText());
                     long most = uuid.getMostSignificantBits();
                     long least = uuid.getLeastSignificantBits();
-                    onNewMostValue.accept(most);
-                    onNewLeastValue.accept(least);
-                    if (
-                        input.getBackground() == Color.red
-                    ) input.setBackground(defaultColor);
+                    SwingUtilities.invokeLater(() -> onNewMostValue.accept(most)
+                    );
+                    SwingUtilities.invokeLater(() ->
+                        onNewLeastValue.accept(least)
+                    );
+                    if (input.getBackground() == Color.red) input.setBackground(
+                        defaultColor
+                    );
                     pane.updateValues();
                 } catch (IllegalArgumentException e) {
                     input.setBackground(Color.red);
@@ -145,8 +158,8 @@ public class UUIDConvertPane extends JPanel {
             public void changed() {
                 try {
                     Long newValue = Long.parseLong(input.getText());
-                    input.setText(String.valueOf(newValue));
-                    onNewValue.accept(newValue);
+                    SwingUtilities.invokeLater(() -> onNewValue.accept(newValue)
+                    );
                     if (input.getBackground() == Color.red) input.setBackground(
                         defaultColor
                     );

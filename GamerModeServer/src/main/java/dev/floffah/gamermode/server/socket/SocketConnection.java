@@ -13,7 +13,7 @@ import dev.floffah.gamermode.server.packet.PacketTranslator;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.connection.Disconnect;
 import dev.floffah.gamermode.server.packet.connection.LoginDisconnect;
-import dev.floffah.gamermode.util.VarIntUtil;
+import dev.floffah.gamermode.datatype.util.VarIntUtil;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;

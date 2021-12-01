@@ -5,7 +5,7 @@ import dev.floffah.gamermode.error.UUIDMismatchException;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.play.JoinGame;
-import dev.floffah.gamermode.util.VarIntUtil;
+import dev.floffah.gamermode.datatype.util.VarIntUtil;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;

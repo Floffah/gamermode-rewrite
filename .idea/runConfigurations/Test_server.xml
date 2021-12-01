@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Test server" type="JarApplication">
-    <option name="JAR_PATH" value="$PROJECT_DIR$/GamerModeServer/target/gamermode-0.0.1-shaded.jar" />
+    <option name="JAR_PATH" value="$PROJECT_DIR$/GamerModeServer/target/gamermode-server-0.0.1-shaded.jar" />
     <option name="PROGRAM_PARAMETERS" value="-gui -usewd -debug" />
     <option name="WORKING_DIRECTORY" value="E:\projects\engine\gamermode-rewrite\test" />
     <option name="ALTERNATIVE_JRE_PATH" />
