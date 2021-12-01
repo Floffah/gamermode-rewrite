@@ -227,8 +227,14 @@ public class World {
         );
         tag.putByte("playerGameType", (byte) player.getGameMode());
 
-        tag.putLong("WorldUUIDMost", this.getUniqueId().getMostSignificantBits());
-        tag.putLong("WorldUUIDLeast", this.getUniqueId().getLeastSignificantBits());
+        tag.putLong(
+            "WorldUUIDMost",
+            this.getUniqueId().getMostSignificantBits()
+        );
+        tag.putLong(
+            "WorldUUIDLeast",
+            this.getUniqueId().getLeastSignificantBits()
+        );
 
         NBTUtil.write(tag, playerData, true);
     }

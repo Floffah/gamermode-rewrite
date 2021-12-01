@@ -461,10 +461,7 @@ public class SocketConnection {
                     Arrays.toString(dataOutBytes)
                 );
 
-            VarIntUtil.writeVarInt(
-                finalOutput,
-                dataOutBytes.length + 1
-            );
+            VarIntUtil.writeVarInt(finalOutput, dataOutBytes.length + 1);
             VarIntUtil.writeVarInt(finalOutput, p.id);
             finalOutput.write(dataOutBytes);
 

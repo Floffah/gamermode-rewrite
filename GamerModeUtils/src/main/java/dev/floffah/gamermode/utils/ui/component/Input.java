@@ -9,7 +9,7 @@ public class Input extends JPlaceholderTextField {
 
     public Input() {
         super();
-        this.setFont(FontProvider.INSTANCE.getMonoFont().deriveFont(20f));
+        this.setFont(FontProvider.INSTANCE.getMonoFont().deriveFont(13f));
     }
 
     @Override

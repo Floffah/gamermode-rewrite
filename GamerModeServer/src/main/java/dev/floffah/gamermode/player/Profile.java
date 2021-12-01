@@ -3,17 +3,16 @@ package dev.floffah.gamermode.player;
 import dev.floffah.gamermode.error.UUIDMismatchException;
 import dev.floffah.gamermode.util.UUIDUtil;
 import dev.floffah.gamermode.world.WorldManager;
-import lombok.Getter;
-import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.IntArrayTag;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
+import lombok.Getter;
+import net.querz.nbt.tag.CompoundTag;
+import net.querz.nbt.tag.IntArrayTag;
+import org.json.JSONObject;
 
 public class Profile {
 
@@ -39,10 +38,10 @@ public class Profile {
         // session server stuff
         URL joinUrl = new URL(
             sessionhasJoinedURL +
-                "?username=" +
-                this.player.username +
-                "&serverId=" +
-                this.player.conn.getSessionHash()
+            "?username=" +
+            this.player.username +
+            "&serverId=" +
+            this.player.conn.getSessionHash()
         );
         HttpURLConnection conn = (HttpURLConnection) joinUrl.openConnection();
         conn.setRequestMethod("GET");
@@ -63,14 +62,14 @@ public class Profile {
         String unformattedUUID = response.getString("id");
         String formattedUUID =
             unformattedUUID.substring(0, 8) +
-                "-" +
-                unformattedUUID.substring(8, 12) +
-                "-" +
-                unformattedUUID.substring(12, 16) +
-                "-" +
-                unformattedUUID.substring(16, 20) +
-                "-" +
-                unformattedUUID.substring(20, 32);
+            "-" +
+            unformattedUUID.substring(8, 12) +
+            "-" +
+            unformattedUUID.substring(12, 16) +
+            "-" +
+            unformattedUUID.substring(16, 20) +
+            "-" +
+            unformattedUUID.substring(20, 32);
         this.player.uniqueId = UUID.fromString(formattedUUID);
 
         // read the player's data
@@ -109,7 +108,7 @@ public class Profile {
                     .getServer()
                     .getConfig()
                     .worlds.enforceDefaultGamemode ||
-                    !rawdata.containsKey("playerGameType")
+                !rawdata.containsKey("playerGameType")
             ) {
                 this.getPlayer().gameMode =
                     this.getPlayer()
@@ -126,7 +125,8 @@ public class Profile {
             long worldUUIDLeast = rawdata.getLong("WorldUUIDLeast");
             UUID worldUUID = new UUID(worldUUIDMost, worldUUIDLeast);
 
-            if (wm.getWorlds().containsKey(worldUUID)) this.player.world = wm.getWorlds().get(worldUUID);
+            if (wm.getWorlds().containsKey(worldUUID)) this.player.world =
+                wm.getWorlds().get(worldUUID);
         }
 
         wm.writeRawPlayerData(this.getPlayer());

@@ -2,14 +2,13 @@ package dev.floffah.gamermode.utils.window;
 
 import dev.floffah.gamermode.utils.fonts.FontProvider;
 import dev.floffah.gamermode.utils.ui.UUIDConvertPane;
-import lombok.Getter;
-import lombok.val;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import javax.swing.*;
+import lombok.Getter;
+import lombok.val;
 
 public class UtilWindow {
 
@@ -34,18 +33,18 @@ public class UtilWindow {
         this.frame.setResizable(true);
         this.frame.setMinimumSize(new Dimension(700, 500));
         this.frame.setDefaultCloseOperation(
-            WindowConstants.DO_NOTHING_ON_CLOSE
-        );
+                WindowConstants.DO_NOTHING_ON_CLOSE
+            );
 
         val winref = this;
         this.frame.addWindowListener(
-            new WindowAdapter() {
-                @Override
-                public void windowClosing(WindowEvent e) {
-                    winref.shutdown();
+                new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        winref.shutdown();
+                    }
                 }
-            }
-        );
+            );
 
         this.uuidConvert = new UUIDConvertPane();
         this.frame.add(this.uuidConvert);

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import lombok.Getter;
 
 public class FontProvider {
+
     public static FontProvider INSTANCE;
 
     @Getter

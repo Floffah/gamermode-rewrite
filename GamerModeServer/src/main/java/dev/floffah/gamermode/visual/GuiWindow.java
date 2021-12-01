@@ -1,7 +1,6 @@
 package dev.floffah.gamermode.visual;
 
 import dev.floffah.gamermode.server.Server;
-
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;

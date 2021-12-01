@@ -1,18 +1,29 @@
 package dev.floffah.gamermode.utils.ui.borders;
 
-import javax.swing.border.AbstractBorder;
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import javax.swing.border.AbstractBorder;
 
 public class RoundedCornerBorder extends AbstractBorder {
+
     private static final Color ALPHA_ZERO = new Color(0x0, true);
 
     @Override
-    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+    public void paintBorder(
+        Component c,
+        Graphics g,
+        int x,
+        int y,
+        int width,
+        int height
+    ) {
         Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(
+            RenderingHints.KEY_ANTIALIASING,
+            RenderingHints.VALUE_ANTIALIAS_ON
+        );
         Shape border = this.getBorderShape(x, y, width - 1, height - 1);
         g2.setPaint(ALPHA_ZERO);
         Area corner = new Area(new Rectangle2D.Double(x, y, width, height));

@@ -8,13 +8,12 @@ import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.util.StringUtil;
 import dev.floffah.gamermode.util.VarIntUtil;
 import dev.floffah.gamermode.world.World;
-import net.querz.nbt.io.NBTSerializer;
-import net.querz.nbt.io.NamedTag;
-import net.querz.nbt.tag.CompoundTag;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import net.querz.nbt.io.NBTSerializer;
+import net.querz.nbt.io.NamedTag;
+import net.querz.nbt.tag.CompoundTag;
 
 public class JoinGame extends BasePacket {
 
@@ -29,9 +28,11 @@ public class JoinGame extends BasePacket {
         output.writeInt(this.conn.getPlayer().getEntityID()); // Entity ID
         output.writeByte(
             this.conn.getSocketManager()
-                .getServer()
-                .getConfig()
-                .worlds.isHardcore ? 1 : 0
+                    .getServer()
+                    .getConfig()
+                    .worlds.isHardcore
+                ? 1
+                : 0
         ); // Is hardcore
         output.writeByte(this.conn.getPlayer().getGameMode()); // Gamemode
         output.writeByte(this.conn.getPlayer().getPreviousGameMode()); // Previous Gamemode
@@ -54,8 +55,25 @@ public class JoinGame extends BasePacket {
 
         NBTSerializer serializer = new NBTSerializer();
 
-        output.write(serializer.toBytes(new NamedTag(null, this.conn.getPlayer().getWorld().getWorldManager().buildDimensionCodec()))); // Dimension Codec
-        output.write(serializer.toBytes(new NamedTag(null, this.conn.getPlayer().getWorld().buildDimType()))); // Dimension
+        output.write(
+            serializer.toBytes(
+                new NamedTag(
+                    null,
+                    this.conn.getPlayer()
+                        .getWorld()
+                        .getWorldManager()
+                        .buildDimensionCodec()
+                )
+            )
+        ); // Dimension Codec
+        output.write(
+            serializer.toBytes(
+                new NamedTag(
+                    null,
+                    this.conn.getPlayer().getWorld().buildDimType()
+                )
+            )
+        ); // Dimension
 
         StringUtil.writeUTF(
             this.conn.getPlayer().getWorld().getType().getName(),
@@ -86,7 +104,9 @@ public class JoinGame extends BasePacket {
                 .worlds.renderDistance
         ); // View Distance
 
-        output.writeByte(this.conn.getSocketManager().getServer().isDebugMode() ? 0 : 1); // Reduced Debug Info
+        output.writeByte(
+            this.conn.getSocketManager().getServer().isDebugMode() ? 0 : 1
+        ); // Reduced Debug Info
 
         // TODO: implement gamerules
         // even just reading and writing for now
