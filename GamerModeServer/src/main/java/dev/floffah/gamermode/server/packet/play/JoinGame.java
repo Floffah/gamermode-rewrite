@@ -53,7 +53,7 @@ public class JoinGame extends BasePacket {
             StringUtil.writeUTF(world.getName(), output);
         } // World Names
 
-        NBTSerializer serializer = new NBTSerializer();
+        NBTSerializer serializer = new NBTSerializer(false);
 
         output.write(
             serializer.toBytes(
