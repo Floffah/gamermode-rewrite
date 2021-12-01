@@ -52,7 +52,7 @@ public class JoinGame extends BasePacket {
             StringUtil.writeUTF(world.getName(), output);
         } // World Names
 
-        NBTSerializer serializer = new NBTSerializer();
+        NBTSerializer serializer = new NBTSerializer(false);
 
         output.write(serializer.toBytes(new NamedTag(null, this.conn.getPlayer().getWorld().getWorldManager().buildDimensionCodec()))); // Dimension Codec
         output.write(serializer.toBytes(new NamedTag(null, this.conn.getPlayer().getWorld().buildDimType()))); // Dimension
