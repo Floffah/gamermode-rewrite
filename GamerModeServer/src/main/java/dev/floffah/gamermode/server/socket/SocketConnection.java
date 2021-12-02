@@ -5,6 +5,7 @@ import static org.awaitility.Awaitility.await;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import dev.floffah.gamermode.datatype.util.VarIntUtil;
 import dev.floffah.gamermode.events.network.PacketSendingEvent;
 import dev.floffah.gamermode.events.network.PacketSentEvent;
 import dev.floffah.gamermode.player.Player;
@@ -13,7 +14,6 @@ import dev.floffah.gamermode.server.packet.PacketTranslator;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.connection.Disconnect;
 import dev.floffah.gamermode.server.packet.connection.LoginDisconnect;
-import dev.floffah.gamermode.datatype.util.VarIntUtil;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -384,6 +384,9 @@ public class SocketConnection {
                 this.socketManager.server.getLogger().printStackTrace(e);
             } catch (ConditionTimeoutException ignored) {}
         }
+        try {
+            this.close();
+        } catch (IOException ignored) {}
         Thread.currentThread().interrupt();
     }
 
@@ -467,7 +470,12 @@ public class SocketConnection {
 
             byte[] sent = finalOutput.toByteArray();
 
-            out.write(sent);
+            if (this.isClosed()) return;
+            try {
+                out.write(sent);
+            } catch (SocketException e) {
+                if (e.getMessage().contains("reset")) this.close();
+            }
             try {
                 out.flush();
             } catch (SocketException e) {

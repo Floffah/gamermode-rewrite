@@ -1,22 +1,90 @@
 package dev.floffah.gamermode.world.dimension;
 
 import dev.floffah.gamermode.datatype.Identifier;
-import net.querz.nbt.io.NamedTag;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * See information below Join Game (0x26) packet on the protocol wiki (https://wiki.vg/Protocol#Join_Game)
+ */
 public class DimensionType {
 
-    public static DimensionType OVERWORLD = new DimensionType(
+    /**
+     * The default dimension type for the overworld. When accessing this you should clone it.
+     */
+    public static DimensionType DEFAULT_OVERWORLD = new DimensionType(
         false,
         true,
         0.0f,
-        null,
         Identifier.from("minecraft", "infiniburn_overworld"),
         false,
         true,
         true,
         Identifier.from("minecraft", "overworld"),
+        null,
+        true,
+        0,
+        256,
+        256,
+        1.0f,
+        false,
+        false
+    );
+    /**
+     * The default dimension type for the overworld's caves. When accessing this you should clone it.
+     */
+    public static DimensionType DEFAULT_OVERWORLD_CAVES = new DimensionType(
+        false,
+        true,
+        0.0f,
+        Identifier.from("minecraft", "infiniburn_overworld"),
+        false,
+        true,
+        true,
+        Identifier.from("minecraft", "overworld"),
+        null,
+        true,
+        0,
+        256,
+        256,
+        1.0f,
+        false,
+        true
+    );
+    /**
+     * The default dimension type for the nether. When accessing this you should clone it.
+     */
+    public static DimensionType DEFAULT_THE_NETHER = new DimensionType(
+        true,
+        false,
+        0.1f,
+        Identifier.from("minecraft", "infiniburn_nether"),
+        true,
+        false,
+        false,
+        Identifier.from("minecraft", "the_nether"),
+        18000L,
+        false,
+        0,
+        256,
+        128,
+        8.0f,
+        true,
+        true
+    );
+    /**
+     * The default dimension type for the end. When accessing this you should clone it.
+     */
+    public static DimensionType DEFAULT_THE_END = new DimensionType(
+        false,
+        false,
+        0.0f,
+        Identifier.from("minecraft", "infiniburn_end"),
+        false,
+        false,
+        false,
+        Identifier.from("minecraft", "the_end"),
+        6000L,
         true,
         0,
         256,
@@ -30,14 +98,15 @@ public class DimensionType {
     public boolean natural;
     public float ambient_light;
 
-    @Nullable
-    public Long fixed_time;
-
     public Identifier infiniburn;
     public boolean respawn_anchor_works;
     public boolean has_skylight;
     public boolean bed_works;
     public Identifier effects; // ?
+
+    @Nullable
+    public Long fixed_time;
+
     public boolean has_raids;
     public int min_y;
     public int height;
@@ -51,12 +120,12 @@ public class DimensionType {
         boolean piglin_safe,
         boolean natural,
         float ambient_light,
-        @Nullable Long fixed_time,
         Identifier infiniburn,
         boolean respawn_anchor_works,
         boolean has_skylight,
         boolean bed_works,
         Identifier effects,
+        @Nullable Long fixed_time,
         boolean has_raids,
         int min_y,
         int height,

@@ -1,11 +1,11 @@
 package dev.floffah.gamermode.server.packet.login;
 
 import com.google.common.io.ByteArrayDataInput;
+import dev.floffah.gamermode.datatype.util.VarIntUtil;
 import dev.floffah.gamermode.error.UUIDMismatchException;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.play.JoinGame;
-import dev.floffah.gamermode.datatype.util.VarIntUtil;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -148,7 +148,7 @@ public class EncryptionResponse extends BasePacket {
                 .getLogger()
                 .printStackTrace(e);
             this.conn.disconnect(
-                    Component.text(e.getMessage()).color(NamedTextColor.RED)
+                    Component.text(e.getMessage()).color(NamedTextColor.DARK_RED)
                 );
             return;
         }

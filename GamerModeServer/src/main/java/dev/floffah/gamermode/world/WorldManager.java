@@ -2,6 +2,7 @@ package dev.floffah.gamermode.world;
 
 import dev.floffah.gamermode.player.Player;
 import dev.floffah.gamermode.server.Server;
+import dev.floffah.gamermode.world.dimension.DimensionType;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,15 +74,19 @@ public class WorldManager {
         String worldname = this.server.getConfig().worlds.worldname;
 
         World world = new World(this, WorldType.OVERWORLD, worldname);
+        world.dimTypes.add(DimensionType.DEFAULT_OVERWORLD);
+        world.dimTypes.add(DimensionType.DEFAULT_OVERWORLD_CAVES);
         this.overworld = world;
         this.worlds.put(world.getUniqueId(), world);
 
         this.nether =
             new World(this, WorldType.NETHER, worldname + "_nether", world);
+        this.nether.dimTypes.add(DimensionType.DEFAULT_THE_NETHER);
         this.worlds.put(this.nether.getUniqueId(), this.nether);
 
         this.end =
             new World(this, WorldType.END, worldname + "_the_end", world);
+        this.end.dimTypes.add(DimensionType.DEFAULT_THE_END);
         this.worlds.put(this.end.getUniqueId(), this.end);
     }
 

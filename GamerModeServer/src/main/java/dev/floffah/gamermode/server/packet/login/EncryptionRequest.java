@@ -2,10 +2,10 @@ package dev.floffah.gamermode.server.packet.login;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import dev.floffah.gamermode.server.packet.BasePacket;
-import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.datatype.util.StringUtil;
 import dev.floffah.gamermode.datatype.util.VarIntUtil;
+import dev.floffah.gamermode.server.packet.BasePacket;
+import dev.floffah.gamermode.server.packet.PacketType;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

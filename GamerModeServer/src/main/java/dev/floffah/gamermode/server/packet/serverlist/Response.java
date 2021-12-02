@@ -2,9 +2,9 @@ package dev.floffah.gamermode.server.packet.serverlist;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import dev.floffah.gamermode.datatype.util.StringUtil;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
-import dev.floffah.gamermode.datatype.util.StringUtil;
 import java.io.IOException;
 import java.util.UUID;
 import net.kyori.adventure.text.Component;

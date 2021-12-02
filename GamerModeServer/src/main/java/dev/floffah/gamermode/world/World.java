@@ -1,15 +1,14 @@
 package dev.floffah.gamermode.world;
 
-import dev.floffah.gamermode.player.Player;
 import dev.floffah.gamermode.datatype.util.UUIDUtil;
+import dev.floffah.gamermode.player.Player;
+import dev.floffah.gamermode.world.dimension.DimensionType;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import dev.floffah.gamermode.world.dimension.DimensionType;
 import lombok.Getter;
 import lombok.NonNull;
 import net.querz.nbt.io.NBTUtil;

@@ -3,16 +3,15 @@ package dev.floffah.gamermode.server.packet.play;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import dev.floffah.gamermode.server.packet.BasePacket;
-import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.datatype.util.StringUtil;
 import dev.floffah.gamermode.datatype.util.VarIntUtil;
+import dev.floffah.gamermode.server.packet.BasePacket;
+import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.world.World;
-import net.querz.nbt.io.NBTSerializer;
-import net.querz.nbt.io.NamedTag;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import net.querz.nbt.io.NBTSerializer;
+import net.querz.nbt.io.NamedTag;
 
 public class JoinGame extends BasePacket {
 
@@ -27,9 +26,9 @@ public class JoinGame extends BasePacket {
         output.writeInt(this.conn.getPlayer().getEntityID()); // Entity ID
         output.writeByte(
             this.conn.getSocketManager()
-                .getServer()
-                .getConfig()
-                .worlds.isHardcore
+                    .getServer()
+                    .getConfig()
+                    .worlds.isHardcore
                 ? 1
                 : 0
         ); // Is hardcore
@@ -53,30 +52,47 @@ public class JoinGame extends BasePacket {
         } // World Names
 
         NBTSerializer serializer = new NBTSerializer(false);
-//        ByteArrayOutputStream nbtstream = new ByteArrayOutputStream();
+        //        ByteArrayOutputStream nbtstream = new ByteArrayOutputStream();
 
-        output.write(serializer.toBytes(new NamedTag(null, this.conn.getPlayer().getWorld().getWorldManager().buildDimensionCodec())));
-        output.write(serializer.toBytes(new NamedTag(null, this.conn.getPlayer().getWorld().buildDimType())));
-//        serializer.toStream(
-//            new NamedTag(
-//                null,
-//                this.conn.getPlayer()
-//                    .getWorld()
-//                    .getWorldManager()
-//                    .buildDimensionCodec()
-//            ),
-//            nbtstream
-//        ); // Dimension Codec
-//        serializer.toStream(
-//            new NamedTag(
-//                null,
-//                this.conn.getPlayer().getWorld().buildDimType()
-//            ),
-//            nbtstream
-//        ); // Dimension
-//
-//        nbtstream.flush();
-//        output.write(nbtstream.toByteArray());
+        output.write(
+            serializer.toBytes(
+                new NamedTag(
+                    null,
+                    this.conn.getPlayer()
+                        .getWorld()
+                        .getWorldManager()
+                        .buildDimensionCodec()
+                )
+            )
+        );
+        output.write(
+            serializer.toBytes(
+                new NamedTag(
+                    null,
+                    this.conn.getPlayer().getWorld().buildDimType()
+                )
+            )
+        );
+        //        serializer.toStream(
+        //            new NamedTag(
+        //                null,
+        //                this.conn.getPlayer()
+        //                    .getWorld()
+        //                    .getWorldManager()
+        //                    .buildDimensionCodec()
+        //            ),
+        //            nbtstream
+        //        ); // Dimension Codec
+        //        serializer.toStream(
+        //            new NamedTag(
+        //                null,
+        //                this.conn.getPlayer().getWorld().buildDimType()
+        //            ),
+        //            nbtstream
+        //        ); // Dimension
+        //
+        //        nbtstream.flush();
+        //        output.write(nbtstream.toByteArray());
 
         StringUtil.writeUTF(
             this.conn.getPlayer().getWorld().getType().getName(),
