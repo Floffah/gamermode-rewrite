@@ -1,5 +1,7 @@
 package dev.floffah.gamermode.server.socket;
 
+import static org.awaitility.Awaitility.await;
+
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -12,16 +14,6 @@ import dev.floffah.gamermode.server.packet.PacketTranslator;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.connection.Disconnect;
 import dev.floffah.gamermode.server.packet.connection.LoginDisconnect;
-import lombok.Getter;
-import lombok.Setter;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import org.awaitility.core.ConditionTimeoutException;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -31,8 +23,15 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.security.KeyPair;
 import java.util.Arrays;
-
-import static org.awaitility.Awaitility.await;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import lombok.Getter;
+import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import org.awaitility.core.ConditionTimeoutException;
 
 public class SocketConnection {
 
@@ -365,31 +364,29 @@ public class SocketConnection {
                 await()
                     .until(() ->
                         this.in == null ||
-                            (this.isTimedOut() && this.in.available() <= 0) ||
-                            this.out == null ||
-                            this.sock == null ||
-                            this.sock.isClosed() ||
-                            this.closed
+                        (this.isTimedOut() && this.in.available() <= 0) ||
+                        this.out == null ||
+                        this.sock == null ||
+                        this.sock.isClosed() ||
+                        this.closed
                     );
                 if (this.closed) Thread.currentThread().interrupt();
                 if ((this.isTimedOut() && this.in.available() <= 0)) {
                     this.disconnect(
-                        Component
-                            .text("Keepalive timeout")
-                            .color(NamedTextColor.RED)
-                    );
+                            Component
+                                .text("Keepalive timeout")
+                                .color(NamedTextColor.RED)
+                        );
                 } else {
                     break;
                 }
             } catch (IOException e) {
                 this.socketManager.server.getLogger().printStackTrace(e);
-            } catch (ConditionTimeoutException ignored) {
-            }
+            } catch (ConditionTimeoutException ignored) {}
         }
         try {
             this.close();
-        } catch (IOException ignored) {
-        }
+        } catch (IOException ignored) {}
         Thread.currentThread().interrupt();
     }
 
@@ -442,8 +439,8 @@ public class SocketConnection {
             dataOutput = p.buildOutput();
         } catch (Exception e) {
             this.disconnect(
-                Component.text(e.getMessage()).color(NamedTextColor.RED)
-            );
+                    Component.text(e.getMessage()).color(NamedTextColor.RED)
+                );
             return;
         }
 
@@ -477,20 +474,16 @@ public class SocketConnection {
             try {
                 out.write(sent);
             } catch (SocketException e) {
-                this.socketManager.server.getLogger()
-                    .printDebugStackTrace(e);
-                if (
-                    e.getMessage().contains("reset")
-                ) this.close();
+                this.socketManager.server.getLogger().printDebugStackTrace(e);
+                if (e.getMessage().contains("reset")) this.close();
             }
             try {
                 out.flush();
             } catch (SocketException e) {
-                this.socketManager.server.getLogger()
-                    .printDebugStackTrace(e);
+                this.socketManager.server.getLogger().printDebugStackTrace(e);
                 if (
                     e.getMessage().toLowerCase().contains("closed") ||
-                        e.getMessage().toLowerCase().contains("aborted")
+                    e.getMessage().toLowerCase().contains("aborted")
                 ) this.close();
             }
 
@@ -577,9 +570,9 @@ public class SocketConnection {
                     packet = PacketTranslator.identify(id, this);
                 } catch (
                     InvocationTargetException
-                        | NoSuchMethodException
-                        | IllegalAccessException
-                        | InstantiationException e
+                    | NoSuchMethodException
+                    | IllegalAccessException
+                    | InstantiationException e
                 ) {
                     disconnect(
                         Component.text(e.getMessage()).color(NamedTextColor.RED)
@@ -631,7 +624,7 @@ public class SocketConnection {
     public void setState(ConnectionState state) {
         if (
             this.state == ConnectionState.HANDSHAKE &&
-                state == ConnectionState.LOGIN
+            state == ConnectionState.LOGIN
         ) {
             this.player = new Player(this);
             this.getSocketManager()

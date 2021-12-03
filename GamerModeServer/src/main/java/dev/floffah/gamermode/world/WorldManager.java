@@ -192,7 +192,6 @@ public class WorldManager {
                 }
             }
 
-
             dimType.put("value", dimRegistry);
 
             data.put("minecraft:dimension_type", dimType);
@@ -200,14 +199,22 @@ public class WorldManager {
             CompoundTag worldGenBiome = new CompoundTag();
             worldGenBiome.putString("type", "minecraft:worldgen/biome");
 
-            ListTag<CompoundTag> biomeRegistry = new ListTag<>(CompoundTag.class);
+            ListTag<CompoundTag> biomeRegistry = new ListTag<>(
+                CompoundTag.class
+            );
 
             int biomeId = 0;
             for (Biome biome : this.biomes.values()) {
                 CompoundTag biomeRegistryEntry = new CompoundTag();
-                biomeRegistryEntry.putString("name", biome.getName().toString());
+                biomeRegistryEntry.putString(
+                    "name",
+                    biome.getName().toString()
+                );
                 biomeRegistryEntry.putInt("id", biomeId);
-                biomeRegistryEntry.put("element", Biome.buildBiomeElement(biome));
+                biomeRegistryEntry.put(
+                    "element",
+                    Biome.buildBiomeElement(biome)
+                );
 
                 biomeRegistry.add(biomeRegistryEntry);
 

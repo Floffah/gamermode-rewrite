@@ -2,6 +2,7 @@ package dev.floffah.gamermode.server.packet;
 
 import dev.floffah.gamermode.server.packet.login.EncryptionResponse;
 import dev.floffah.gamermode.server.packet.login.LoginStart;
+import dev.floffah.gamermode.server.packet.play.message.PluginMessage;
 import dev.floffah.gamermode.server.packet.serverlist.Handshake;
 import dev.floffah.gamermode.server.packet.serverlist.Ping;
 import dev.floffah.gamermode.server.packet.serverlist.Request;
@@ -17,11 +18,14 @@ public enum AllServerBoundPackets {
 
     // LOGIN
     LOGIN_START(0x00, ConnectionState.LOGIN, LoginStart.class),
-    ENCRYPTION_RESPONSE(0x01, ConnectionState.LOGIN, EncryptionResponse.class);
+    ENCRYPTION_RESPONSE(0x01, ConnectionState.LOGIN, EncryptionResponse.class),
 
-    public int id;
-    public ConnectionState state;
-    public Class<? extends BasePacket> packet;
+    // PLAY
+    PLUGIN_MESSAGE(0x0A, ConnectionState.PLAY, PluginMessage.class);
+
+    public final int id;
+    public final ConnectionState state;
+    public final Class<? extends BasePacket> packet;
 
     AllServerBoundPackets(
         int id,

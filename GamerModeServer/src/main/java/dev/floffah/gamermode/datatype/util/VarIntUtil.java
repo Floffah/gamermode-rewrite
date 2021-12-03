@@ -3,7 +3,6 @@ package dev.floffah.gamermode.datatype.util;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import dev.floffah.gamermode.datatype.VarInt;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

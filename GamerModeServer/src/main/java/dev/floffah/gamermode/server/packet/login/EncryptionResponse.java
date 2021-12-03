@@ -1,12 +1,16 @@
 package dev.floffah.gamermode.server.packet.login;
 
 import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import dev.floffah.gamermode.datatype.Identifier;
 import dev.floffah.gamermode.datatype.VarInt;
-import dev.floffah.gamermode.datatype.util.VarIntUtil;
+import dev.floffah.gamermode.datatype.util.StringUtil;
 import dev.floffah.gamermode.error.UUIDMismatchException;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.play.JoinGame;
+import dev.floffah.gamermode.server.packet.play.info.ServerDifficulty;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -42,15 +46,14 @@ public class EncryptionResponse extends BasePacket {
         Cipher tempCipher;
 
         // read the shared secret
-        int sharedSecretLength = VarInt.from(in).intValue();;
+        int sharedSecretLength = VarInt.from(in).intValue();
         byte[] sharedSecret = new byte[sharedSecretLength];
         in.readFully(sharedSecret, 0, sharedSecretLength);
-
         // read the verify token
-        int verifyTokenLength = VarInt.from(in).intValue();;
+        int verifyTokenLength = VarInt.from(in).intValue();
+
         byte[] verifyToken = new byte[verifyTokenLength];
         in.readFully(verifyToken, 0, verifyTokenLength);
-
         // initialise the temporary cipher
         try {
             tempCipher = Cipher.getInstance("RSA");
@@ -64,7 +67,6 @@ public class EncryptionResponse extends BasePacket {
                 );
             return;
         }
-
         // decrypt the shared secret
         try {
             tempCipher.init(
@@ -91,6 +93,7 @@ public class EncryptionResponse extends BasePacket {
 
         // decrypt the verify token
         byte[] clientVerify;
+
         try {
             tempCipher.init(
                 Cipher.DECRYPT_MODE,
@@ -121,7 +124,6 @@ public class EncryptionResponse extends BasePacket {
                 );
             return;
         }
-
         // initialise the cipher used for the rest of communication
         try {
             Cipher encryptCypher = Cipher.getInstance("AES/CFB8/NoPadding");
@@ -187,9 +189,10 @@ public class EncryptionResponse extends BasePacket {
 
         // enable encryption
         this.conn.setEncrypted(true);
-        this.conn.getBaseIn().enableDecryption(this.conn.getDecryptCipher());
-        this.conn.getBaseOut().enableEncryption(this.conn.getEncryptCipher());
 
+        this.conn.getBaseIn().enableDecryption(this.conn.getDecryptCipher());
+
+        this.conn.getBaseOut().enableEncryption(this.conn.getEncryptCipher());
         try {
             this.conn.getPlayer().getProfile().doHasJoined();
         } catch (UUIDMismatchException e) {
@@ -202,9 +205,14 @@ public class EncryptionResponse extends BasePacket {
                 );
             return;
         }
-
-        // sent packets
+        // send packets
         this.conn.send(new LoginSuccess());
         this.conn.send(new JoinGame());
+        ByteArrayDataOutput brandOut = ByteStreams.newDataOutput();
+        StringUtil.writeUTF("GamerMode", brandOut);
+        this.conn.getPlayer()
+            .sendPluginMessage(Identifier.from("minecraft", "brand"), brandOut);
+        this.conn.send(new ServerDifficulty());
+        // TODO: player abilities
     }
 }

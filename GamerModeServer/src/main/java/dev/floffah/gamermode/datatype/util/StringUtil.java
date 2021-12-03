@@ -4,7 +4,6 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.errorprone.annotations.Var;
 import dev.floffah.gamermode.datatype.VarInt;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 

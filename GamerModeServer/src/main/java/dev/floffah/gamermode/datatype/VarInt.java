@@ -2,12 +2,11 @@ package dev.floffah.gamermode.datatype;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.annotation.Native;
+import org.jetbrains.annotations.NotNull;
 
 public class VarInt
     extends Number

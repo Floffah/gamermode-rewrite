@@ -1,8 +1,12 @@
 package dev.floffah.gamermode.player;
 
+import com.google.common.io.ByteArrayDataOutput;
+import dev.floffah.gamermode.datatype.Identifier;
 import dev.floffah.gamermode.entity.Entity;
+import dev.floffah.gamermode.server.packet.play.message.PluginMessage;
 import dev.floffah.gamermode.server.socket.SocketConnection;
 import dev.floffah.gamermode.world.World;
+import java.io.IOException;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -94,6 +98,21 @@ public class Player implements Entity {
     @Getter
     protected World world;
 
+    /**
+     * Claimed brand by the player
+     * -- GETTER --
+     * Get the player's claimed brand
+     *
+     * @return The player's claimed brand
+     * -- SETTER --
+     * Set the player's claimed brand
+     *
+     * @param brand The player's claimed brand
+     */
+    @Getter
+    @Setter
+    protected String brand;
+
     public Player(SocketConnection conn) {
         this.conn = conn;
 
@@ -111,5 +130,12 @@ public class Player implements Entity {
                 .getServer()
                 .getWorldManager()
                 .getOverworld(); // this is overwritten and is just for null issues
+    }
+
+    public void sendPluginMessage(
+        Identifier channel,
+        ByteArrayDataOutput message
+    ) throws IOException {
+        this.conn.send(new PluginMessage(channel, message));
     }
 }
