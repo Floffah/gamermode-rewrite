@@ -1,6 +1,7 @@
 package dev.floffah.gamermode.world.biome;
 
 public class BiomeParticleProperties {
+
     /**
      * Possibly the probability of spawning the particle.
      */
@@ -8,5 +9,5 @@ public class BiomeParticleProperties {
     /**
      * THe properties of the particle to spawn.
      */
-    public BiomeParticleOptionProperties particle_properties;
+    public BiomeParticleOptionProperties options;
 }

@@ -92,6 +92,10 @@ public class Logger {
         if (main.isDebugMode()) e.printStackTrace();
     }
 
+    public void printDebugStackTrace(Exception e) {
+        if (main.isDebugMode()) this.printStackTrace(e);
+    }
+
     /**
      * Gets the log format for a given type
      *

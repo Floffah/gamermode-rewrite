@@ -31,22 +31,22 @@ A list of everything that has been implemented so far
 
 #### [Handshaking State](https://wiki.vg/Protocol#Handshaking)
 
-- [x] C->S 0x00 Handshake - [class](./src/main/java/dev/floffah/gamermode/server/packet/serverlist/Handshake.java), [protocol wiki](https://wiki.vg/Protocol#Handshake)
+- [x] C->S 0x00 Handshake - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/serverlist/Handshake.java), [protocol wiki](https://wiki.vg/Protocol#Handshake)
 - [ ] C->S 0xFE Legacy Server List Ping - ~~class~~, [protocol wiki](https://wiki.vg/Protocol#Legacy_Server_List_Ping)
     - not a priority
 
 #### [Status State](https://wiki.vg/Protocol#Status)
-- [x] S->C 0x00 Response - [class](./src/main/java/dev/floffah/gamermode/server/packet/serverlist/Response.java), [protocol wiki](https://wiki.vg/Protocol#Response)
-- [x] C->S 0x00 Request - [class](./src/main/java/dev/floffah/gamermode/server/packet/serverlist/Request.java), [protocol wiki](https://wiki.vg/Protocol#Request)
-- [x] S->C 0x01 Pong - [class](./src/main/java/dev/floffah/gamermode/server/packet/serverlist/Pong.java), [protocol wiki](https://wiki.vg/Protocol#Pong)
-- [x] C->S 0x01 Ping - [class](./src/main/java/dev/floffah/gamermode/server/packet/serverlist/Ping.java), [protocol wiki](https://wiki.vg/Protocol#Ping)
+- [x] S->C 0x00 Response - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/serverlist/Response.java), [protocol wiki](https://wiki.vg/Protocol#Response)
+- [x] C->S 0x00 Request - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/serverlist/Request.java), [protocol wiki](https://wiki.vg/Protocol#Request)
+- [x] S->C 0x01 Pong - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/serverlist/Pong.java), [protocol wiki](https://wiki.vg/Protocol#Pong)
+- [x] C->S 0x01 Ping - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/serverlist/Ping.java), [protocol wiki](https://wiki.vg/Protocol#Ping)
 
 #### [Login State](https://wiki.vg/Protocol#Login)
-- [x] S->C 0x00 Disconnect - [class](./src/main/java/dev/floffah/gamermode/server/packet/connection/LoginDisconnect.java), [protocol wiki](https://wiki.vg/Protocol#Disconnect_.28login.29)
-- [x] C->S 0x00 Login Start - [class](./src/main/java/dev/floffah/gamermode/server/packet/login/LoginStart.java), [protocol wiki](https://wiki.vg/Protocol#Login_Start)
-- [x] S->C 0x01 Encryption Request - [class](./src/main/java/dev/floffah/gamermode/server/packet/login/EncryptionRequest.java), [protocol wiki](https://wiki.vg/Protocol#Encryption_Request)
-- [x] C->S 0x01 Encryption Response - [class](./src/main/java/dev/floffah/gamermode/server/packet/login/EncryptionResponse.java), [protocol wiki](https://wiki.vg/Protocol#Encryption_Response)
-- [x] S->C 0x02 Login Success - [class](./src/main/java/dev/floffah/gamermode/server/packet/login/LoginSuccess.java), [protocol wiki](https://wiki.vg/Protocol#Login_Success)
+- [x] S->C 0x00 Disconnect - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/connection/LoginDisconnect.java), [protocol wiki](https://wiki.vg/Protocol#Disconnect_.28login.29)
+- [x] C->S 0x00 Login Start - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/login/LoginStart.java), [protocol wiki](https://wiki.vg/Protocol#Login_Start)
+- [x] S->C 0x01 Encryption Request - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/login/EncryptionRequest.java), [protocol wiki](https://wiki.vg/Protocol#Encryption_Request)
+- [x] C->S 0x01 Encryption Response - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/login/EncryptionResponse.java), [protocol wiki](https://wiki.vg/Protocol#Encryption_Response)
+- [x] S->C 0x02 Login Success - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/login/LoginSuccess.java), [protocol wiki](https://wiki.vg/Protocol#Login_Success)
 - [ ] C->S 0x02 Login Plugin Response - ~~class~~, [protocol wiki](https://wiki.vg/Protocol#Login_Plugin_Response)
     - will not implement
 - [ ] S->C 0x03 Set Compression - ~~class~~, [protocol wiki](https://wiki.vg/Protocol#Set_Compression)
@@ -55,5 +55,5 @@ A list of everything that has been implemented so far
     - will not implement
 
 #### [Play State](https://wiki.vg/Protocol#Play)
-- [x] S->C 0x1A Disconnect - [class](./src/main/java/dev/floffah/gamermode/server/packet/connection/Disconnect.java), [protocol wiki](https://wiki.vg/Protocol#Disconnect_.28play.29)
-- [x] S->C 0x26 Join Game - [class](./src/main/java/dev/floffah/gamermode/server/packet/play/JoinGame.java), [protocol wiki](https://wiki.vg/Protocol#Join_Game)
+- [x] S->C 0x1A Disconnect - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/connection/Disconnect.java), [protocol wiki](https://wiki.vg/Protocol#Disconnect_.28play.29)
+- [x] S->C 0x26 Join Game - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/play/JoinGame.java), [protocol wiki](https://wiki.vg/Protocol#Join_Game)

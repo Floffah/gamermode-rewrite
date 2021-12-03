@@ -1,7 +1,9 @@
 package dev.floffah.gamermode.world;
 
+import dev.floffah.gamermode.datatype.Identifier;
 import dev.floffah.gamermode.player.Player;
 import dev.floffah.gamermode.server.Server;
+import dev.floffah.gamermode.world.biome.Biome;
 import dev.floffah.gamermode.world.dimension.DimensionType;
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,6 +16,27 @@ import net.querz.nbt.tag.ListTag;
 public class WorldManager {
 
     /**
+     * All worlds the server is aware of
+     * -- GETTER --
+     * Get all worlds the server is aware of
+     *
+     * @return All worlds the server is aware of
+     */
+    @Getter
+    private final Map<UUID, World> worlds = new HashMap<>();
+
+    // worlds
+    /**
+     * All biomes known to the server
+     * -- GETTER --
+     * Get all biomes known to the server
+     *
+     * @return All biomes known to the server
+     */
+    @Getter
+    private final Map<Identifier, Biome> biomes = new HashMap<>();
+
+    /**
      * The server instance
      * -- GETTER --
      * Get the server instance
@@ -23,7 +46,6 @@ public class WorldManager {
     @Getter
     protected Server server;
 
-    // worlds
     /**
      * The overworld
      * -- GETTER --
@@ -55,14 +77,14 @@ public class WorldManager {
     protected World end;
 
     /**
-     * All worlds the server is aware of
+     * Cached dimension codec
      * -- GETTER --
-     * Get all worlds the server is aware of
+     * Get the cached dimension codec
      *
-     * @return All worlds the server is aware of
+     * @return The cached dimension codec
      */
     @Getter
-    protected Map<UUID, World> worlds = new HashMap<>();
+    private CompoundTag dimensionCodec;
 
     public WorldManager(Server server) {
         this.server = server;
@@ -72,6 +94,12 @@ public class WorldManager {
         this.server.getLogger().info("Loading world");
 
         String worldname = this.server.getConfig().worlds.worldname;
+
+        // biomes
+
+        this.addBiome(Biome.PLAINS);
+
+        // worlds
 
         World world = new World(this, WorldType.OVERWORLD, worldname);
         world.dimTypes.add(DimensionType.DEFAULT_OVERWORLD);
@@ -88,6 +116,10 @@ public class WorldManager {
             new World(this, WorldType.END, worldname + "_the_end", world);
         this.end.dimTypes.add(DimensionType.DEFAULT_THE_END);
         this.worlds.put(this.end.getUniqueId(), this.end);
+    }
+
+    public void addBiome(Biome biome) {
+        this.biomes.put(biome.getName(), biome);
     }
 
     public boolean hasRawPlayerData(UUID uuid) {
@@ -122,53 +154,72 @@ public class WorldManager {
     }
 
     public CompoundTag buildDimensionCodec() {
-        CompoundTag data = new CompoundTag();
+        if (this.dimensionCodec == null) {
+            CompoundTag data = new CompoundTag();
 
-        CompoundTag dimType = new CompoundTag();
+            CompoundTag dimType = new CompoundTag();
 
-        dimType.putString("type", "minecraft:dimension_type");
+            dimType.putString("type", "minecraft:dimension_type");
 
-        ListTag<CompoundTag> dimRegistry = new ListTag<>(CompoundTag.class);
+            ListTag<CompoundTag> dimRegistry = new ListTag<>(CompoundTag.class);
 
-        int id = 0;
-        for (World world : this.worlds.values()) {
-            CompoundTag dimTypeElements = world.buildDimType();
+            int dimId = 0;
+            for (World world : this.worlds.values()) {
+                CompoundTag dimTypeElements = world.buildDimType();
 
-            CompoundTag dimTypeRegistry = new CompoundTag();
-            dimTypeRegistry.putString("name", world.getType().getName());
-            dimTypeRegistry.putInt("id", id);
-            dimTypeRegistry.put("element", dimTypeElements);
+                CompoundTag dimTypeRegistry = new CompoundTag();
+                dimTypeRegistry.putString("name", world.getType().getName());
+                dimTypeRegistry.putInt("id", dimId);
+                dimTypeRegistry.put("element", dimTypeElements);
 
-            dimRegistry.add(dimTypeRegistry);
+                dimRegistry.add(dimTypeRegistry);
 
-            id++;
+                dimId++;
 
-            CompoundTag dimCaves = world.buildCavesDimType();
-            if (dimCaves != null) {
-                CompoundTag dimCavesRegistry = new CompoundTag();
-                dimCavesRegistry.putString(
-                    "name",
-                    world.getType().getName() + "_caves"
-                );
-                dimCavesRegistry.putInt("id", id);
-                dimCavesRegistry.put("element", dimCaves);
+                CompoundTag dimCaves = world.buildCavesDimType();
+                if (dimCaves != null) {
+                    CompoundTag dimCavesRegistry = new CompoundTag();
+                    dimCavesRegistry.putString(
+                        "name",
+                        world.getType().getName() + "_caves"
+                    );
+                    dimCavesRegistry.putInt("id", dimId);
+                    dimCavesRegistry.put("element", dimCaves);
 
-                dimRegistry.add(dimCavesRegistry);
+                    dimRegistry.add(dimCavesRegistry);
 
-                id++;
+                    dimId++;
+                }
             }
+
+
+            dimType.put("value", dimRegistry);
+
+            data.put("minecraft:dimension_type", dimType);
+
+            CompoundTag worldGenBiome = new CompoundTag();
+            worldGenBiome.putString("type", "minecraft:worldgen/biome");
+
+            ListTag<CompoundTag> biomeRegistry = new ListTag<>(CompoundTag.class);
+
+            int biomeId = 0;
+            for (Biome biome : this.biomes.values()) {
+                CompoundTag biomeRegistryEntry = new CompoundTag();
+                biomeRegistryEntry.putString("name", biome.getName().toString());
+                biomeRegistryEntry.putInt("id", biomeId);
+                biomeRegistryEntry.put("element", Biome.buildBiomeElement(biome));
+
+                biomeRegistry.add(biomeRegistryEntry);
+
+                biomeId++;
+            }
+
+            worldGenBiome.put("value", biomeRegistry);
+
+            data.put("minecraft:worldgen/biome", worldGenBiome);
+            this.dimensionCodec = data;
         }
 
-        dimType.put("value", dimRegistry);
-
-        data.put("minecraft:dimension_type", dimType);
-
-        CompoundTag worldGenBiome = new CompoundTag();
-        worldGenBiome.putString("type", "minecraft:worldgen/biome");
-        worldGenBiome.put("value", new ListTag<>(CompoundTag.class));
-
-        data.put("minecraft:worldgen/biome", worldGenBiome);
-
-        return data;
+        return this.dimensionCodec;
     }
 }

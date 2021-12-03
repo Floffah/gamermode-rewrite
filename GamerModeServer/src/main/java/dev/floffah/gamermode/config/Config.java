@@ -82,6 +82,10 @@ public class Config {
          * Whether to change a player's gamemode when they join
          */
         public boolean enforceDefaultGamemode = false;
+        /**
+         * The distance that things like entities are processed within by the clients. Should be the same or less than the render distance.
+         */
+        public int simulationDistance = 6;
     }
 
     /**

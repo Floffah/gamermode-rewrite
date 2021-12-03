@@ -1,11 +1,9 @@
 package dev.floffah.gamermode.server.socket;
 
-import static org.awaitility.Awaitility.await;
-
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import dev.floffah.gamermode.datatype.util.VarIntUtil;
+import dev.floffah.gamermode.datatype.VarInt;
 import dev.floffah.gamermode.events.network.PacketSendingEvent;
 import dev.floffah.gamermode.events.network.PacketSentEvent;
 import dev.floffah.gamermode.player.Player;
@@ -14,6 +12,16 @@ import dev.floffah.gamermode.server.packet.PacketTranslator;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.connection.Disconnect;
 import dev.floffah.gamermode.server.packet.connection.LoginDisconnect;
+import lombok.Getter;
+import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import org.awaitility.core.ConditionTimeoutException;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -23,15 +31,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.security.KeyPair;
 import java.util.Arrays;
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import lombok.Getter;
-import lombok.Setter;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import org.awaitility.core.ConditionTimeoutException;
+
+import static org.awaitility.Awaitility.await;
 
 public class SocketConnection {
 
@@ -364,29 +365,31 @@ public class SocketConnection {
                 await()
                     .until(() ->
                         this.in == null ||
-                        (this.isTimedOut() && this.in.available() <= 0) ||
-                        this.out == null ||
-                        this.sock == null ||
-                        this.sock.isClosed() ||
-                        this.closed
+                            (this.isTimedOut() && this.in.available() <= 0) ||
+                            this.out == null ||
+                            this.sock == null ||
+                            this.sock.isClosed() ||
+                            this.closed
                     );
                 if (this.closed) Thread.currentThread().interrupt();
                 if ((this.isTimedOut() && this.in.available() <= 0)) {
                     this.disconnect(
-                            Component
-                                .text("Keepalive timeout")
-                                .color(NamedTextColor.RED)
-                        );
+                        Component
+                            .text("Keepalive timeout")
+                            .color(NamedTextColor.RED)
+                    );
                 } else {
                     break;
                 }
             } catch (IOException e) {
                 this.socketManager.server.getLogger().printStackTrace(e);
-            } catch (ConditionTimeoutException ignored) {}
+            } catch (ConditionTimeoutException ignored) {
+            }
         }
         try {
             this.close();
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
         Thread.currentThread().interrupt();
     }
 
@@ -439,8 +442,8 @@ public class SocketConnection {
             dataOutput = p.buildOutput();
         } catch (Exception e) {
             this.disconnect(
-                    Component.text(e.getMessage()).color(NamedTextColor.RED)
-                );
+                Component.text(e.getMessage()).color(NamedTextColor.RED)
+            );
             return;
         }
 
@@ -464,8 +467,8 @@ public class SocketConnection {
                     Arrays.toString(dataOutBytes)
                 );
 
-            VarIntUtil.writeVarInt(finalOutput, dataOutBytes.length + 1);
-            VarIntUtil.writeVarInt(finalOutput, p.id);
+            new VarInt(dataOutBytes.length + 1).writeTo(finalOutput);
+            new VarInt(p.id).writeTo(finalOutput);
             finalOutput.write(dataOutBytes);
 
             byte[] sent = finalOutput.toByteArray();
@@ -474,16 +477,21 @@ public class SocketConnection {
             try {
                 out.write(sent);
             } catch (SocketException e) {
-                if (e.getMessage().contains("reset")) this.close();
+                this.socketManager.server.getLogger()
+                    .printDebugStackTrace(e);
+                if (
+                    e.getMessage().contains("reset")
+                ) this.close();
             }
             try {
                 out.flush();
             } catch (SocketException e) {
+                this.socketManager.server.getLogger()
+                    .printDebugStackTrace(e);
                 if (
                     e.getMessage().toLowerCase().contains("closed") ||
-                    e.getMessage().toLowerCase().contains("aborted")
-                ) this.close(); else this.socketManager.server.getLogger()
-                    .printStackTrace(e);
+                        e.getMessage().toLowerCase().contains("aborted")
+                ) this.close();
             }
 
             socketManager.server
@@ -547,8 +555,8 @@ public class SocketConnection {
             while (this.in != null && this.in.available() > 0) {
                 // note that all bytes read here are automatically decrypted if needed as the underlying input stream used by the DataInputStream
                 // is the custom FlexibleInputStream which may have encryption/decryption enabled.
-                int len = VarIntUtil.readVarInt(this.in);
-                int id = VarIntUtil.readVarInt(this.in);
+                int len = VarInt.from(this.in).intValue();
+                int id = VarInt.from(this.in).intValue();
 
                 byte[] data = new byte[len - 1];
 
@@ -569,9 +577,9 @@ public class SocketConnection {
                     packet = PacketTranslator.identify(id, this);
                 } catch (
                     InvocationTargetException
-                    | NoSuchMethodException
-                    | IllegalAccessException
-                    | InstantiationException e
+                        | NoSuchMethodException
+                        | IllegalAccessException
+                        | InstantiationException e
                 ) {
                     disconnect(
                         Component.text(e.getMessage()).color(NamedTextColor.RED)
@@ -623,7 +631,7 @@ public class SocketConnection {
     public void setState(ConnectionState state) {
         if (
             this.state == ConnectionState.HANDSHAKE &&
-            state == ConnectionState.LOGIN
+                state == ConnectionState.LOGIN
         ) {
             this.player = new Player(this);
             this.getSocketManager()

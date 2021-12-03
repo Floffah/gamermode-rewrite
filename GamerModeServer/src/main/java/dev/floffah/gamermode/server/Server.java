@@ -192,7 +192,7 @@ public class Server {
      * @return The server's protocol version
      */
     @Getter
-    protected int protocolVersion = 756;
+    protected int protocolVersion = 757;
 
     /**
      * The server's id

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
  * See information below Join Game (0x26) packet on the protocol wiki (https://wiki.vg/Protocol#Join_Game)
  */
 public class BiomeEffectProperties {
+
     /**
      * The color of the sky.
      */
@@ -23,32 +24,46 @@ public class BiomeEffectProperties {
      * The tint color of the water blocks.
      */
     public int water_color;
+
     /**
      * The tint color of the grass.
      */
-    public @Nullable Integer foliage_color;
+    @Nullable
+    public Integer foliage_color;
+
     /**
      * ?
      */
-    public @Nullable Integer grass_color;
+    @Nullable
+    public Integer grass_color;
+
     /**
      * Unknown, likely affects foliage color.
      */
-    public @Nullable BiomeEffectGrassColorModifier grass_color_modifier;
+    @Nullable
+    public BiomeEffectGrassColorModifier grass_color_modifier;
+
     /**
      * Music propertiers for the biome.
      */
-    public @Nullable BiomeEffectMusicProperties music;
+    @Nullable
+    public BiomeEffectMusicProperties music;
+
     /**
      * Ambient soundtrack.
      */
-    public @Nullable Identifier ambient_sound;
+    @Nullable
+    public Identifier ambient_sound;
+
     /**
      * Additional ambient sound that plays randomly.
      */
-    public @Nullable BiomeEffectAdditionsSoundProperties additions_sound;
+    @Nullable
+    public BiomeEffectAdditionsSoundProperties additions_sound;
+
     /**
      * Additional ambient sound that plays at an interval.
      */
-    public @Nullable BiomeEffectMoodSoundProperties mood_sound;
+    @Nullable
+    public BiomeEffectMoodSoundProperties mood_sound;
 }

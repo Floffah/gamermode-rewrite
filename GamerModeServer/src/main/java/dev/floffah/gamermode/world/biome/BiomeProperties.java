@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
  * See information below Join Game (0x26) packet on the protocol wiki (https://wiki.vg/Protocol#Join_Game)
  */
 public class BiomeProperties {
+
     /**
      * The type of precipitation in the biome.
      */
@@ -29,17 +30,22 @@ public class BiomeProperties {
     /**
      * The category of the biome.
      */
-    public BiomeCategory biome;
+    public BiomeCategory category;
+
     /**
      * ?.
      */
-    public @Nullable BiomeTemperatureModifier temperature_modifier;
+    @Nullable
+    public BiomeTemperatureModifier temperature_modifier;
+
     /**
      * Biome effects
      */
     public BiomeEffectProperties effects;
+
     /**
      * Particles that appear randomly in the biome.
      */
-    public @Nullable BiomeParticleProperties particles;
+    @Nullable
+    public BiomeParticleProperties particle;
 }

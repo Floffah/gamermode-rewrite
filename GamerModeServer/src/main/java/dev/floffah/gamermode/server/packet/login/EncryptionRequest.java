@@ -2,6 +2,7 @@ package dev.floffah.gamermode.server.packet.login;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import dev.floffah.gamermode.datatype.VarInt;
 import dev.floffah.gamermode.datatype.util.StringUtil;
 import dev.floffah.gamermode.datatype.util.VarIntUtil;
 import dev.floffah.gamermode.server.packet.BasePacket;
@@ -35,14 +36,14 @@ public class EncryptionRequest extends BasePacket {
                     .generateKeyPair()
             );
             byte[] publicKey = conn.getKeyPair().getPublic().getEncoded();
-            VarIntUtil.writeVarInt(out, publicKey.length);
+            new VarInt(publicKey.length).writeTo(out);
             out.write(publicKey);
 
             byte[] verifyToken = new byte[5];
             SecureRandom.getInstanceStrong().nextBytes(verifyToken);
             conn.setVerifyToken(verifyToken);
 
-            VarIntUtil.writeVarInt(out, verifyToken.length);
+            new VarInt(verifyToken.length).writeTo(out);
             out.write(verifyToken);
         } catch (NoSuchAlgorithmException e) {
             conn.getSocketManager().getServer().getLogger().printStackTrace(e);

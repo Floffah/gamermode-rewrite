@@ -1,4 +1,3 @@
 package dev.floffah.gamermode.world.biome;
 
-public class BiomeManager {
-}
+public class BiomeManager {}

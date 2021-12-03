@@ -65,7 +65,7 @@ public class Identifier {
      * @param parseable The string to parse
      * @return The parsed identifier
      */
-    public static Identifier fromString(String parseable) {
+    public static Identifier parse(String parseable) {
         String[] parsed = parseable.split(":");
 
         if (parsed.length == 1) {

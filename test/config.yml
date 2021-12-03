@@ -11,6 +11,7 @@ worlds:
   isHardcore: false
   defaultGamemode: 0
   enforceDefaultGamemode: false
+  simulationDistance: 6
 performance:
   poolSize: 10
   scheduledPoolSize: 10

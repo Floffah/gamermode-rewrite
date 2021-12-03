@@ -19,6 +19,7 @@ public class GuiWindow {
 
     /**
      * Instantiates a new GUI window.
+     *
      * @param main The main server instance.
      */
     public GuiWindow(Server main) {
@@ -27,6 +28,7 @@ public class GuiWindow {
 
     /**
      * Start a new GUI window instance if it is possible
+     *
      * @param main The main server instance.
      * @return The new instance of the GUI window.
      */
@@ -50,6 +52,7 @@ public class GuiWindow {
 
     /**
      * Check if the user double-clicked the file.
+     *
      * @return True if the user double-clicked the file.
      */
     public static boolean check() {
@@ -59,6 +62,7 @@ public class GuiWindow {
 
     /**
      * Util method to create a new GUI window instance properly.
+     *
      * @param main The main server instance.
      * @return The new instance of the GUI window.
      * @throws IOException any error from the shutdown process.
@@ -71,6 +75,7 @@ public class GuiWindow {
 
     /**
      * Creates the GUI window and starts the output.
+     *
      * @throws IOException any error from the shutdown process.
      */
     public void startOutput() throws IOException {
@@ -137,9 +142,10 @@ public class GuiWindow {
 
     /**
      * Append a new line to the GUI window.
+     *
      * @param message The message to append.
      */
     public void log(String message) {
-        text.append(message);
+        SwingUtilities.invokeLater(() -> text.append(message));
     }
 }

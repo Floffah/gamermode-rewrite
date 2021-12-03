@@ -3,8 +3,8 @@ package dev.floffah.gamermode.server.packet.play;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import dev.floffah.gamermode.datatype.VarInt;
 import dev.floffah.gamermode.datatype.util.StringUtil;
-import dev.floffah.gamermode.datatype.util.VarIntUtil;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.world.World;
@@ -24,25 +24,23 @@ public class JoinGame extends BasePacket {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
 
         output.writeInt(this.conn.getPlayer().getEntityID()); // Entity ID
-        output.writeByte(
+        output.writeBoolean(
             this.conn.getSocketManager()
-                    .getServer()
-                    .getConfig()
-                    .worlds.isHardcore
-                ? 1
-                : 0
+                .getServer()
+                .getConfig()
+                .worlds.isHardcore
         ); // Is hardcore
         output.writeByte(this.conn.getPlayer().getGameMode()); // Gamemode
         output.writeByte(this.conn.getPlayer().getPreviousGameMode()); // Previous Gamemode
 
-        VarIntUtil.writeVarInt(
-            output,
+        new VarInt(
             this.conn.getSocketManager()
                 .getServer()
                 .getWorldManager()
                 .getWorlds()
                 .size()
-        ); // World Count
+        )
+            .writeTo(output); // World Count
         for (World world : this.conn.getSocketManager()
             .getServer()
             .getWorldManager()
@@ -52,7 +50,6 @@ public class JoinGame extends BasePacket {
         } // World Names
 
         NBTSerializer serializer = new NBTSerializer(false);
-        //        ByteArrayOutputStream nbtstream = new ByteArrayOutputStream();
 
         output.write(
             serializer.toBytes(
@@ -73,26 +70,6 @@ public class JoinGame extends BasePacket {
                 )
             )
         );
-        //        serializer.toStream(
-        //            new NamedTag(
-        //                null,
-        //                this.conn.getPlayer()
-        //                    .getWorld()
-        //                    .getWorldManager()
-        //                    .buildDimensionCodec()
-        //            ),
-        //            nbtstream
-        //        ); // Dimension Codec
-        //        serializer.toStream(
-        //            new NamedTag(
-        //                null,
-        //                this.conn.getPlayer().getWorld().buildDimType()
-        //            ),
-        //            nbtstream
-        //        ); // Dimension
-        //
-        //        nbtstream.flush();
-        //        output.write(nbtstream.toByteArray());
 
         StringUtil.writeUTF(
             this.conn.getPlayer().getWorld().getType().getName(),
@@ -110,32 +87,40 @@ public class JoinGame extends BasePacket {
                 .getLong()
         ); // Hashed seed
 
-        VarIntUtil.writeVarInt(
-            output,
+        new VarInt(
             this.conn.getSocketManager().getServer().getConfig().players.max
-        ); // Max Players
+        )
+            .writeTo(output); // Max Players
 
-        VarIntUtil.writeVarInt(
-            output,
+        new VarInt(
             this.conn.getSocketManager()
                 .getServer()
                 .getConfig()
                 .worlds.renderDistance
-        ); // View Distance
+        )
+            .writeTo(output); // View Distance
 
-        output.writeByte(
-            this.conn.getSocketManager().getServer().isDebugMode() ? 0 : 1
+        new VarInt(
+            this.conn.getSocketManager()
+                .getServer()
+                .getConfig()
+                .worlds.simulationDistance
+        )
+            .writeTo(output); // Simulation Distance
+
+        output.writeBoolean(
+            this.conn.getSocketManager().getServer().isDebugMode()
         ); // Reduced Debug Info
 
         // TODO: implement gamerules
         // even just reading and writing for now
-        output.writeByte(1); // Enable respawn screen
+        output.writeBoolean(true); // Enable respawn screen
 
-        output.writeByte(0); // Is Debug - false because not necessary
+        output.writeBoolean(false); // Is Debug - false because not necessary
 
         // TODO: implement world types
         // so the server can differentiate between superflat and normal worlds
-        output.writeByte(0); // Is Flat
+        output.writeBoolean(false); // Is Flat
 
         return output;
     }

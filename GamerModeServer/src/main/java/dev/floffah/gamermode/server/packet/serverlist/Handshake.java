@@ -1,6 +1,7 @@
 package dev.floffah.gamermode.server.packet.serverlist;
 
 import com.google.common.io.ByteArrayDataInput;
+import dev.floffah.gamermode.datatype.VarInt;
 import dev.floffah.gamermode.datatype.util.StringUtil;
 import dev.floffah.gamermode.datatype.util.VarIntUtil;
 import dev.floffah.gamermode.server.packet.BasePacket;
@@ -16,10 +17,10 @@ public class Handshake extends BasePacket {
 
     @Override
     public void process(int len, ByteArrayDataInput in) throws IOException {
-        int protocol = VarIntUtil.readVarInt(in);
+        int protocol = VarInt.from(in).intValue();
         String addr = StringUtil.readUTF(in);
         int port = in.readUnsignedShort();
-        int next = VarIntUtil.readVarInt(in);
+        int next = VarInt.from(in).intValue();
 
         conn.setProtocolVersion(protocol);
         conn.setAddressProvided(addr);
