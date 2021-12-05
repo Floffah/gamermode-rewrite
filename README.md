@@ -58,5 +58,7 @@ A list of everything that has been implemented so far
 - [x] C->S 0x0A Plugin Message - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/play/message/PluginMessage.java), [protocol wiki](https://wiki.vg/Protocol#Plugin_Message_.28serverbound.29)
 - [x] S->C 0x0E Server Difficulty - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/play/info/ServerDifficulty.java), [protocol wiki](https://wiki.vg/Protocol#Server_Difficulty)
 - [x] S->C 0x18 Plugin Message - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/play/message/PluginMessage.java), [protocol wiki](https://wiki.vg/Protocol#Plugin_Message_.28clientbound.29)
+- [ ] C->S 0x19 Player Abilities -[class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/play/state/PlayerAbilitiesServerBound.java), [protocol wiki](https://wiki.vg/Protocol#Player_Abilities_.28serverbound.29)
 - [x] S->C 0x1A Disconnect - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/connection/Disconnect.java), [protocol wiki](https://wiki.vg/Protocol#Disconnect_.28play.29)
 - [x] S->C 0x26 Join Game - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/play/JoinGame.java), [protocol wiki](https://wiki.vg/Protocol#Join_Game)
+- [x] S->C 0x32 Player Abilities - [class](./GamerModeServer/src/main/java/dev/floffah/gamermode/server/packet/play/state/PlayerAbilitiesClientBound.java), [protocol wiki](https://wiki.vg/Protocol#Player_Abilities_.28clientbound.29)

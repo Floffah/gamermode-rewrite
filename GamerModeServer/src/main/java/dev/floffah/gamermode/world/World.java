@@ -1,7 +1,6 @@
 package dev.floffah.gamermode.world;
 
-import dev.floffah.gamermode.datatype.util.UUIDUtil;
-import dev.floffah.gamermode.player.Player;
+import dev.floffah.gamermode.entity.player.Player;
 import dev.floffah.gamermode.world.dimension.DimensionType;
 import java.io.File;
 import java.io.IOException;
@@ -230,28 +229,14 @@ public class World {
 
         CompoundTag tag = new CompoundTag();
 
-        tag.putIntArray("UUID", UUIDUtil.uuidToIntArray(player.getUniqueId()));
-
-        tag.putByte(
-            "previousPlayerGameType",
-            (byte) player.getPreviousGameMode()
-        );
-        tag.putByte("playerGameType", (byte) player.getGameMode());
-
-        tag.putLong(
-            "WorldUUIDMost",
-            this.getUniqueId().getMostSignificantBits()
-        );
-        tag.putLong(
-            "WorldUUIDLeast",
-            this.getUniqueId().getLeastSignificantBits()
-        );
+        player.applySavableData(tag, this.getWorldManager().getServer());
 
         NBTUtil.write(tag, playerData, true);
     }
 
     /**
      * Creates dimension type NBT for this world
+     *
      * @return The dimension type NBT
      */
     public CompoundTag buildDimType() {
@@ -260,6 +245,7 @@ public class World {
 
     /**
      * Creates dimension type NBT for this world's caves. Null if the world doesn't have caves that are separated into another dimension (nether, end).
+     *
      * @return The dimension type NBT
      */
     @Nullable

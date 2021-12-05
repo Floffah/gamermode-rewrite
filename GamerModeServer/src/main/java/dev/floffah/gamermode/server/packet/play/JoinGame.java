@@ -23,7 +23,7 @@ public class JoinGame extends BasePacket {
     public ByteArrayDataOutput buildOutput() throws IOException {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
 
-        output.writeInt(this.conn.getPlayer().getEntityID()); // Entity ID
+        output.writeInt(this.conn.getPlayer().getEntityId()); // Entity ID
         output.writeBoolean(
             this.conn.getSocketManager()
                 .getServer()

@@ -11,6 +11,16 @@ import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.play.JoinGame;
 import dev.floffah.gamermode.server.packet.play.info.ServerDifficulty;
+import dev.floffah.gamermode.server.packet.play.state.PlayerAbilitiesClientBound;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -19,14 +29,6 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 
 /**
  * Incoming login packet for processing the client's encryption response
@@ -63,8 +65,8 @@ public class EncryptionResponse extends BasePacket {
                 .getLogger()
                 .printStackTrace(e);
             this.conn.disconnect(
-                    Component.text(e.getMessage()).color(NamedTextColor.RED)
-                );
+                Component.text(e.getMessage()).color(NamedTextColor.RED)
+            );
             return;
         }
         // decrypt the shared secret
@@ -74,20 +76,20 @@ public class EncryptionResponse extends BasePacket {
                 this.conn.getKeyPair().getPrivate()
             );
             this.conn.setSharedSecret(
-                    new SecretKeySpec(tempCipher.doFinal(sharedSecret), "AES")
-                );
+                new SecretKeySpec(tempCipher.doFinal(sharedSecret), "AES")
+            );
         } catch (
             IllegalBlockSizeException
-            | BadPaddingException
-            | InvalidKeyException e
+                | BadPaddingException
+                | InvalidKeyException e
         ) {
             this.conn.getSocketManager()
                 .getServer()
                 .getLogger()
                 .printStackTrace(e);
             this.conn.disconnect(
-                    Component.text(e.getMessage()).color(NamedTextColor.RED)
-                );
+                Component.text(e.getMessage()).color(NamedTextColor.RED)
+            );
             return;
         }
 
@@ -102,26 +104,26 @@ public class EncryptionResponse extends BasePacket {
             clientVerify = tempCipher.doFinal(verifyToken);
         } catch (
             IllegalBlockSizeException
-            | BadPaddingException
-            | InvalidKeyException e
+                | BadPaddingException
+                | InvalidKeyException e
         ) {
             this.conn.getSocketManager()
                 .getServer()
                 .getLogger()
                 .printStackTrace(e);
             this.conn.disconnect(
-                    Component.text(e.getMessage()).color(NamedTextColor.RED)
-                );
+                Component.text(e.getMessage()).color(NamedTextColor.RED)
+            );
             return;
         }
 
         // make sure its the same as the server sent
         if (!Arrays.equals(this.conn.getVerifyToken(), clientVerify)) {
             this.conn.disconnect(
-                    Component
-                        .text("Invalid verify token")
-                        .color(NamedTextColor.RED)
-                );
+                Component
+                    .text("Invalid verify token")
+                    .color(NamedTextColor.RED)
+            );
             return;
         }
         // initialise the cipher used for the rest of communication
@@ -142,19 +144,19 @@ public class EncryptionResponse extends BasePacket {
             this.conn.setDecryptCipher(decryptCypher);
         } catch (
             InvalidAlgorithmParameterException
-            | NoSuchPaddingException
-            | InvalidKeyException
-            | NoSuchAlgorithmException e
+                | NoSuchPaddingException
+                | InvalidKeyException
+                | NoSuchAlgorithmException e
         ) {
             this.conn.getSocketManager()
                 .getServer()
                 .getLogger()
                 .printStackTrace(e);
             this.conn.disconnect(
-                    Component
-                        .text(e.getMessage())
-                        .color(NamedTextColor.DARK_RED)
-                );
+                Component
+                    .text(e.getMessage())
+                    .color(NamedTextColor.DARK_RED)
+            );
             return;
         }
 
@@ -182,8 +184,8 @@ public class EncryptionResponse extends BasePacket {
                 .getLogger()
                 .printStackTrace(e);
             this.conn.disconnect(
-                    Component.text(e.getMessage()).color(NamedTextColor.RED)
-                );
+                Component.text(e.getMessage()).color(NamedTextColor.RED)
+            );
             return;
         }
 
@@ -201,8 +203,8 @@ public class EncryptionResponse extends BasePacket {
                 .getLogger()
                 .printStackTrace(e);
             this.conn.disconnect(
-                    Component.text(e.getMessage()).color(NamedTextColor.RED)
-                );
+                Component.text(e.getMessage()).color(NamedTextColor.RED)
+            );
             return;
         }
         // send packets
@@ -213,6 +215,6 @@ public class EncryptionResponse extends BasePacket {
         this.conn.getPlayer()
             .sendPluginMessage(Identifier.from("minecraft", "brand"), brandOut);
         this.conn.send(new ServerDifficulty());
-        // TODO: player abilities
+        this.conn.send(new PlayerAbilitiesClientBound());
     }
 }

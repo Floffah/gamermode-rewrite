@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import dev.floffah.gamermode.config.Config;
 import dev.floffah.gamermode.events.EventEmitter;
-import dev.floffah.gamermode.player.Player;
+import dev.floffah.gamermode.entity.player.Player;
 import dev.floffah.gamermode.server.cache.CacheProvider;
 import dev.floffah.gamermode.server.socket.SocketConnection;
 import dev.floffah.gamermode.server.socket.SocketManager;
@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import lombok.Getter;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class Server {
@@ -375,15 +376,19 @@ public class Server {
     public void shutdown(int status) throws IOException {
         this.getLogger().info("Goodbye!");
 
+        TextComponent shutDownMessage = LegacyComponentSerializer
+            .legacyAmpersand()
+            .deserialize(this.getConfig().messages.shutDownMessage);
         for (SocketConnection connection : this.sock.getConnections()) {
             connection.disconnect(
-                LegacyComponentSerializer
-                    .legacyAmpersand()
-                    .deserialize(this.getConfig().messages.shutDownMessage)
+                shutDownMessage
             );
             this.sock.disposeConnection(connection);
         }
 
+        try {
+            this.loadConfig();
+        } catch (Exception ignored) {}
         this.saveConfig();
 
         this.gui.stop();

@@ -8,7 +8,7 @@ import com.google.common.io.ByteStreams;
 import dev.floffah.gamermode.datatype.VarInt;
 import dev.floffah.gamermode.events.network.PacketSendingEvent;
 import dev.floffah.gamermode.events.network.PacketSentEvent;
-import dev.floffah.gamermode.player.Player;
+import dev.floffah.gamermode.entity.player.Player;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketTranslator;
 import dev.floffah.gamermode.server.packet.PacketType;

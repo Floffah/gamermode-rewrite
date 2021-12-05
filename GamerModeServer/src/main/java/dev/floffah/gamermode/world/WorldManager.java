@@ -1,7 +1,7 @@
 package dev.floffah.gamermode.world;
 
 import dev.floffah.gamermode.datatype.Identifier;
-import dev.floffah.gamermode.player.Player;
+import dev.floffah.gamermode.entity.player.Player;
 import dev.floffah.gamermode.server.Server;
 import dev.floffah.gamermode.world.biome.Biome;
 import dev.floffah.gamermode.world.dimension.DimensionType;
