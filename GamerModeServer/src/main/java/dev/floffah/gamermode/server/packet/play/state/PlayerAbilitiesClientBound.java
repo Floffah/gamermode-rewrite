@@ -4,10 +4,10 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
-
 import java.io.IOException;
 
 public class PlayerAbilitiesClientBound extends BasePacket {
+
     public PlayerAbilitiesClientBound() {
         super("PlayerAbilities", 0x32, PacketType.CLIENTBOUND);
     }
@@ -18,7 +18,9 @@ public class PlayerAbilitiesClientBound extends BasePacket {
 
         out.writeByte(this.conn.getPlayer().getAbilities().toBitField());
         out.writeFloat(this.conn.getPlayer().getMovement().getFlightSpeed());
-        out.writeFloat(this.conn.getPlayer().getMovement().getFieldOfViewModifier());
+        out.writeFloat(
+            this.conn.getPlayer().getMovement().getFieldOfViewModifier()
+        );
 
         return out;
     }

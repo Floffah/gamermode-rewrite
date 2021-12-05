@@ -4,6 +4,7 @@ import net.kyori.adventure.identity.Identity;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerIdentity implements Identity {
+
     private final Player player;
 
     public PlayerIdentity(Player player) {

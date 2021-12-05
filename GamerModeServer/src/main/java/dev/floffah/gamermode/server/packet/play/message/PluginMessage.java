@@ -8,7 +8,6 @@ import dev.floffah.gamermode.datatype.util.StringUtil;
 import dev.floffah.gamermode.events.message.PluginMessageReceivedEvent;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -55,8 +54,8 @@ public class PluginMessage extends BasePacket {
         this.channel = Identifier.parse(StringUtil.readUTF(in));
         int restlen =
             len -
-                1 -
-                this.channel.toString().getBytes(StandardCharsets.UTF_8).length;
+            1 -
+            this.channel.toString().getBytes(StandardCharsets.UTF_8).length;
         byte[] bread = new byte[restlen];
         for (int i = 0; i < restlen; i++) {
             try {

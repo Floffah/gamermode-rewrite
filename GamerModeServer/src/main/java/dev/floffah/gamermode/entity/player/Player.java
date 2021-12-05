@@ -8,15 +8,14 @@ import dev.floffah.gamermode.server.Server;
 import dev.floffah.gamermode.server.packet.play.message.PluginMessage;
 import dev.floffah.gamermode.server.socket.SocketConnection;
 import dev.floffah.gamermode.world.World;
+import java.io.IOException;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.identity.Identified;
 import net.kyori.adventure.identity.Identity;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
-import java.util.UUID;
 
 public class Player implements Entity, DamageableEntity, Identified {
 
@@ -208,7 +207,7 @@ public class Player implements Entity, DamageableEntity, Identified {
                 .getServer()
                 .getConfig()
                 .worlds.enforceDefaultGamemode ||
-                !tag.containsKey("playerGameType")
+            !tag.containsKey("playerGameType")
         ) {
             this.gameMode =
                 this.getConn()

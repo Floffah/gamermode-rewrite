@@ -6,9 +6,9 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.floffah.gamermode.datatype.VarInt;
+import dev.floffah.gamermode.entity.player.Player;
 import dev.floffah.gamermode.events.network.PacketSendingEvent;
 import dev.floffah.gamermode.events.network.PacketSentEvent;
-import dev.floffah.gamermode.entity.player.Player;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketTranslator;
 import dev.floffah.gamermode.server.packet.PacketType;
@@ -22,9 +22,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.security.KeyPair;
+import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+
+import dev.floffah.gamermode.server.packet.play.connection.KeepAliveClientBound;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
@@ -143,8 +150,13 @@ public class SocketConnection {
      * Gets the current keep alive packet ID.
      *
      * @return The current keep alive packet ID.
+     * -- SETTER --
+     * Sets the current keep alive packet ID.
+     *
+     * @param id The current keep alive packet ID.
      */
     @Getter
+    @Setter
     protected long currentKeepaliveID = 0;
 
     /**
@@ -318,6 +330,18 @@ public class SocketConnection {
      */
     @Getter
     protected Player player;
+
+    private final List<ScheduledFuture<?>> cancellableFutures = new ArrayList<>();
+
+    /**
+     * Secure random instance that generates random longs for keep alive ids
+     * -- GETTER --
+     * Gets the secure random instance that generates random longs for keep alive ids.
+     *
+     * @return The secure random instance that generates random longs for keep alive ids.
+     */
+    @Getter
+    protected SecureRandom keepaliveIdGenerator = new SecureRandom();
 
     public SocketConnection(SocketManager main, Socket sock)
         throws IOException {
@@ -505,6 +529,16 @@ public class SocketConnection {
         }
     }
 
+    private void startKeepalive() {
+        this.cancellableFutures.add(this.getSocketManager().getServer().getScheduler().scheduleAtFixedRate(() -> {
+            try {
+                this.send(new KeepAliveClientBound());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }, 0, 5, TimeUnit.SECONDS));
+    }
+
     /**
      * Close the connection.
      *
@@ -516,6 +550,11 @@ public class SocketConnection {
         if (
             this.getPlayer() != null && this.getPlayer().getWorld() != null
         ) this.getPlayer().getWorld().writeRawPlayerData(this.getPlayer());
+
+        for (ScheduledFuture<?> future : this.cancellableFutures) {
+            future.cancel(true);
+        }
+        this.cancellableFutures.clear();
 
         if (this.in != null) this.in.close();
         if (this.out != null) this.out.close();
@@ -558,6 +597,7 @@ public class SocketConnection {
                     try {
                         data[i] = this.in.readByte();
                     } catch (EOFException e) {
+                        e.printStackTrace();
                         break;
                     }
                 }
@@ -631,6 +671,8 @@ public class SocketConnection {
                 .getServer()
                 .getPlayers()
                 .put(this.player.getUniqueId(), this.player);
+        } else if (this.state == ConnectionState.LOGIN && state == ConnectionState.PLAY) {
+            this.startKeepalive();
         }
 
         this.state = state;

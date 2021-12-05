@@ -20,6 +20,7 @@ public class FlexibleInputStream extends InputStream {
 
     /**
      * Enable decryption on this stream.
+     *
      * @param cipher The cipher to use for decryption.
      */
     public void enableDecryption(Cipher cipher) {
@@ -98,7 +99,21 @@ public class FlexibleInputStream extends InputStream {
     @Override
     public int available() throws IOException {
         if (decrypting) {
-            return cin.available();
+            int cavailable = cin.available();
+            int inavailable = in.available();
+            System.out.println(
+                "Cin available: " +
+                cavailable +
+                " In available: " +
+                inavailable +
+                " same?: " +
+                (cavailable == inavailable)
+            );
+            if (cavailable > 0) return cavailable; else if (
+                cavailable == 0 && inavailable > 0
+            ) return inavailable; else {
+                return inavailable;
+            }
         } else {
             return in.available();
         }

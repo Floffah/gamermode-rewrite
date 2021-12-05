@@ -3,11 +3,10 @@ package dev.floffah.gamermode.entity;
 import dev.floffah.gamermode.datatype.util.UUIDUtil;
 import dev.floffah.gamermode.server.Server;
 import dev.floffah.gamermode.world.World;
+import java.util.UUID;
 import net.kyori.adventure.audience.Audience;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.IntArrayTag;
-
-import java.util.UUID;
 
 public interface Entity {
     /**

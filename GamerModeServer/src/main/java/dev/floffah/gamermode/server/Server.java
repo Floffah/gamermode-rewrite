@@ -3,8 +3,8 @@ package dev.floffah.gamermode.server;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import dev.floffah.gamermode.config.Config;
-import dev.floffah.gamermode.events.EventEmitter;
 import dev.floffah.gamermode.entity.player.Player;
+import dev.floffah.gamermode.events.EventEmitter;
 import dev.floffah.gamermode.server.cache.CacheProvider;
 import dev.floffah.gamermode.server.socket.SocketConnection;
 import dev.floffah.gamermode.server.socket.SocketManager;
@@ -380,9 +380,7 @@ public class Server {
             .legacyAmpersand()
             .deserialize(this.getConfig().messages.shutDownMessage);
         for (SocketConnection connection : this.sock.getConnections()) {
-            connection.disconnect(
-                shutDownMessage
-            );
+            connection.disconnect(shutDownMessage);
             this.sock.disposeConnection(connection);
         }
 

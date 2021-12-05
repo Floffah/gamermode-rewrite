@@ -3,10 +3,14 @@ package dev.floffah.gamermode.server.packet.play;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import dev.floffah.gamermode.datatype.Identifier;
 import dev.floffah.gamermode.datatype.VarInt;
 import dev.floffah.gamermode.datatype.util.StringUtil;
+import dev.floffah.gamermode.events.network.PacketSentEvent;
 import dev.floffah.gamermode.server.packet.BasePacket;
 import dev.floffah.gamermode.server.packet.PacketType;
+import dev.floffah.gamermode.server.packet.play.info.ServerDifficulty;
+import dev.floffah.gamermode.server.packet.play.state.PlayerAbilitiesClientBound;
 import dev.floffah.gamermode.world.World;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -123,5 +127,18 @@ public class JoinGame extends BasePacket {
         output.writeBoolean(false); // Is Flat
 
         return output;
+    }
+
+    @Override
+    public void postSend(PacketSentEvent e) throws IOException {
+        ByteArrayDataOutput brandOut = ByteStreams.newDataOutput();
+        StringUtil.writeUTF("GamerMode", brandOut);
+
+        this.conn.getPlayer()
+            .sendPluginMessage(Identifier.from("minecraft", "brand"), brandOut);
+
+        this.conn.send(new ServerDifficulty());
+
+        this.conn.send(new PlayerAbilitiesClientBound());
     }
 }
