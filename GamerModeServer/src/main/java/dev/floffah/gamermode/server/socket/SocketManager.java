@@ -77,11 +77,11 @@ public class SocketManager {
                                         new SocketConnection(this, csock)
                                     );
                             } catch (IOException e) {
-                                this.server.getLogger().printStackTrace(e);
+                                this.server.getLogger().error("Error occurred while initialising a new socket connection", e);
                             }
                         });
                 } catch (IOException e) {
-                    this.server.getLogger().printStackTrace(e);
+                    this.server.getLogger().error("Error occurred while accepting new connections", e);
                 }
             }
         };

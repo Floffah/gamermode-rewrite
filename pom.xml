@@ -27,6 +27,8 @@
         <lombok.maven.version>1.18.20.0</lombok.maven.version>
         <junit.version>5.8.2</junit.version>
         <jackson.version>2.13.0</jackson.version>
+        <jline.version>3.21.0</jline.version>
+        <log4j.version>2.14.1</log4j.version>
     </properties>
 
     <build>

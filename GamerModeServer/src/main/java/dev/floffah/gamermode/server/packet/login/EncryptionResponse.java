@@ -62,7 +62,7 @@ public class EncryptionResponse extends BasePacket {
             this.conn.getSocketManager()
                 .getServer()
                 .getLogger()
-                .printStackTrace(e);
+                .error("Error while creating a temporary cipher", e);
             this.conn.disconnect(
                     Component.text(e.getMessage()).color(NamedTextColor.RED)
                 );
@@ -85,7 +85,7 @@ public class EncryptionResponse extends BasePacket {
             this.conn.getSocketManager()
                 .getServer()
                 .getLogger()
-                .printStackTrace(e);
+                .error("Error occurred while decrypting the shared secret", e);
             this.conn.disconnect(
                     Component.text(e.getMessage()).color(NamedTextColor.RED)
                 );
@@ -109,7 +109,7 @@ public class EncryptionResponse extends BasePacket {
             this.conn.getSocketManager()
                 .getServer()
                 .getLogger()
-                .printStackTrace(e);
+                .error("Error occurred while decrypting the encryption verification token", e);
             this.conn.disconnect(
                     Component.text(e.getMessage()).color(NamedTextColor.RED)
                 );
@@ -150,7 +150,7 @@ public class EncryptionResponse extends BasePacket {
             this.conn.getSocketManager()
                 .getServer()
                 .getLogger()
-                .printStackTrace(e);
+                .error("Error occurred while initiating encryption and decryption cipher", e);
             this.conn.disconnect(
                     Component
                         .text(e.getMessage())
@@ -181,7 +181,7 @@ public class EncryptionResponse extends BasePacket {
             this.conn.getSocketManager()
                 .getServer()
                 .getLogger()
-                .printStackTrace(e);
+                .error("Error occurred while generating a session hash", e);
             this.conn.disconnect(
                     Component.text(e.getMessage()).color(NamedTextColor.RED)
                 );
@@ -200,7 +200,7 @@ public class EncryptionResponse extends BasePacket {
             this.conn.getSocketManager()
                 .getServer()
                 .getLogger()
-                .printStackTrace(e);
+                .error("Error occurred while notifying the Mojang API of the player joining", e);
             this.conn.disconnect(
                     Component.text(e.getMessage()).color(NamedTextColor.RED)
                 );

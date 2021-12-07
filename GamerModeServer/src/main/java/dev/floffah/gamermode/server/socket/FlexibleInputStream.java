@@ -101,14 +101,6 @@ public class FlexibleInputStream extends InputStream {
         if (decrypting) {
             int cavailable = cin.available();
             int inavailable = in.available();
-            System.out.println(
-                "Cin available: " +
-                cavailable +
-                " In available: " +
-                inavailable +
-                " same?: " +
-                (cavailable == inavailable)
-            );
             if (cavailable > 0) return cavailable; else if (
                 cavailable == 0 && inavailable > 0
             ) return inavailable; else {

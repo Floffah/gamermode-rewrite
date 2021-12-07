@@ -1,4 +1,4 @@
-package dev.floffah.gamermode.visual;
+package dev.floffah.gamermode.visual.gui;
 
 import dev.floffah.gamermode.server.Server;
 import java.awt.*;
@@ -44,7 +44,7 @@ public class GuiWindow {
             try {
                 return create(main);
             } catch (IOException e) {
-                main.getLogger().printStackTrace(e);
+                main.getLogger().error("Error occurred while creating the gui window", e);
             }
         }
         return null;
@@ -119,7 +119,7 @@ public class GuiWindow {
                     try {
                         main.shutdown();
                     } catch (IOException ioException) {
-                        main.getLogger().printStackTrace(ioException);
+                        main.getLogger().error("Error occurred while trying to shutdown the server after gui window was closed by user", ioException);
                     }
                 }
             }

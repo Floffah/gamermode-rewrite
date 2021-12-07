@@ -46,7 +46,7 @@ public class EncryptionRequest extends BasePacket {
             new VarInt(verifyToken.length).writeTo(out);
             out.write(verifyToken);
         } catch (NoSuchAlgorithmException e) {
-            conn.getSocketManager().getServer().getLogger().printStackTrace(e);
+            conn.getSocketManager().getServer().getLogger().error("Error occurred while randomizing integer", e);
             conn.disconnect(
                 Component.text(e.getMessage()).color(NamedTextColor.RED)
             );

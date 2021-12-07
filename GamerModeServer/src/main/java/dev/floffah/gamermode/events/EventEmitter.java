@@ -52,7 +52,7 @@ public class EventEmitter {
             ) {
                 server
                     .getLogger()
-                    .err(
+                    .error(
                         String.format(
                             "Method %s() in class %s has incorrect parameters",
                             m.getName(),
@@ -69,7 +69,7 @@ public class EventEmitter {
                     } catch (
                         IllegalAccessException | InvocationTargetException e
                     ) {
-                        server.getLogger().printStackTrace(e);
+                        server.getLogger().error("Error occurred while invoking an event listener's executor", e);
                     }
                 }
             };

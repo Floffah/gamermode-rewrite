@@ -14,6 +14,7 @@ import dev.floffah.gamermode.server.packet.PacketTranslator;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.connection.Disconnect;
 import dev.floffah.gamermode.server.packet.connection.LoginDisconnect;
+import dev.floffah.gamermode.server.packet.play.connection.KeepAliveClientBound;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -30,8 +31,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-
-import dev.floffah.gamermode.server.packet.play.connection.KeepAliveClientBound;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
@@ -363,7 +362,7 @@ public class SocketConnection {
                 try {
                     startPacketReader();
                 } catch (IOException e) {
-                    main.server.getLogger().printStackTrace(e);
+                    main.server.getLogger().error("Error occurred while starting the packet reader", e);
                 }
             });
     }
@@ -405,7 +404,7 @@ public class SocketConnection {
                     break;
                 }
             } catch (IOException e) {
-                this.socketManager.server.getLogger().printStackTrace(e);
+                this.socketManager.server.getLogger().error("Error occurred while checking if the connection was closed", e);
             } catch (ConditionTimeoutException ignored) {}
         }
         try {
@@ -430,12 +429,12 @@ public class SocketConnection {
             this.close();
         } catch (IOException e) {
             this.closed = true;
-            this.socketManager.server.getLogger().printStackTrace(e);
+            this.socketManager.server.getLogger().error("Error occurred while disconnecting the client", e);
 
             try {
                 this.socketManager.disposeConnection(this);
             } catch (IOException e1) {
-                this.socketManager.server.getLogger().printStackTrace(e1);
+                this.socketManager.server.getLogger().error("Error occurred while disposing of the connection after disconnecting the client", e1);
             }
         }
     }
@@ -498,13 +497,13 @@ public class SocketConnection {
             try {
                 out.write(sent);
             } catch (SocketException e) {
-                this.socketManager.server.getLogger().printDebugStackTrace(e);
+                this.socketManager.server.getLogger().debug("Error occurred while writing a byte array to the output stream", e);
                 if (e.getMessage().contains("reset")) this.close();
             }
             try {
                 out.flush();
             } catch (SocketException e) {
-                this.socketManager.server.getLogger().printDebugStackTrace(e);
+                this.socketManager.server.getLogger().debug("Error occurred while flushing the output stream", e);
                 if (
                     e.getMessage().toLowerCase().contains("closed") ||
                     e.getMessage().toLowerCase().contains("aborted")
@@ -530,13 +529,23 @@ public class SocketConnection {
     }
 
     private void startKeepalive() {
-        this.cancellableFutures.add(this.getSocketManager().getServer().getScheduler().scheduleAtFixedRate(() -> {
-            try {
-                this.send(new KeepAliveClientBound());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }, 0, 5, TimeUnit.SECONDS));
+        this.cancellableFutures.add(
+                this.getSocketManager()
+                    .getServer()
+                    .getScheduler()
+                    .scheduleAtFixedRate(
+                        () -> {
+                            try {
+                                this.send(new KeepAliveClientBound());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        },
+                        0,
+                        5,
+                        TimeUnit.SECONDS
+                    )
+            );
     }
 
     /**
@@ -646,7 +655,7 @@ public class SocketConnection {
                     disconnect(
                         Component.text(e.getMessage()).color(NamedTextColor.RED)
                     );
-                    this.socketManager.server.getLogger().printStackTrace(e);
+                    this.socketManager.server.getLogger().error("Error occurred while processing a packet", e);
                     break;
                 }
             }
@@ -671,7 +680,9 @@ public class SocketConnection {
                 .getServer()
                 .getPlayers()
                 .put(this.player.getUniqueId(), this.player);
-        } else if (this.state == ConnectionState.LOGIN && state == ConnectionState.PLAY) {
+        } else if (
+            this.state == ConnectionState.LOGIN && state == ConnectionState.PLAY
+        ) {
             this.startKeepalive();
         }
 

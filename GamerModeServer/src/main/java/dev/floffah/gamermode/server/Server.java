@@ -2,15 +2,23 @@ package dev.floffah.gamermode.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import dev.floffah.gamermode.GamerMode;
 import dev.floffah.gamermode.config.Config;
+import dev.floffah.gamermode.console.Console;
 import dev.floffah.gamermode.entity.player.Player;
 import dev.floffah.gamermode.events.EventEmitter;
 import dev.floffah.gamermode.server.cache.CacheProvider;
 import dev.floffah.gamermode.server.socket.SocketConnection;
 import dev.floffah.gamermode.server.socket.SocketManager;
-import dev.floffah.gamermode.visual.GuiWindow;
-import dev.floffah.gamermode.visual.Logger;
+import dev.floffah.gamermode.util.concurrent.DaemonThreadFactory;
+import dev.floffah.gamermode.util.concurrent.ServerThreadFactory;
+import dev.floffah.gamermode.visual.gui.GuiWindow;
 import dev.floffah.gamermode.world.WorldManager;
+import lombok.Getter;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.apache.logging.log4j.LogManager;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,12 +30,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import lombok.Getter;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class Server {
 
@@ -41,7 +46,7 @@ public class Server {
      * @return The server's logger
      */
     @Getter
-    protected Logger logger;
+    protected org.apache.logging.log4j.Logger logger;
 
     /**
      * The GUI window
@@ -131,7 +136,17 @@ public class Server {
      * @return The server's main thread pool
      */
     @Getter
-    protected ExecutorService pool;
+    protected ThreadPoolExecutor pool;
+
+    /**
+     * The server's daemon thread pool. This uses a thread factory that automatically marks all threads as daemon threads not user threads.
+     * -- GETTER --
+     * Get the server's daemon thread pool
+     *
+     * @return The server's daemon thread pool
+     */
+    @Getter
+    protected ThreadPoolExecutor daemonPool;
 
     /**
      * The server's scheduled thread pool
@@ -141,7 +156,7 @@ public class Server {
      * @return The server's scheduled thread pool
      */
     @Getter
-    protected ScheduledExecutorService scheduler;
+    protected ScheduledThreadPoolExecutor scheduler;
 
     /**
      * The server's small task thread pool.
@@ -153,7 +168,7 @@ public class Server {
      * @return The server's small task thread pool.
      */
     @Getter
-    protected ExecutorService taskPool;
+    protected ThreadPoolExecutor taskPool;
 
     /**
      * The server's key pair generator
@@ -225,9 +240,29 @@ public class Server {
     @Getter
     protected Map<UUID, Player> players = new HashMap<>();
 
+    /**
+     * The server's console
+     * -- GETTER --
+     * Get the server's console
+     *
+     * @return The server's console
+     */
+    @Getter
+    protected Console console;
+
     ObjectMapper om;
     File configFile;
     private int latestEntityID = Integer.MIN_VALUE;
+
+    /**
+     * Whether the server is stopping/has stopped or not
+     * -- GETTER --
+     * Get whether the server is stopping/has stopped or not
+     *
+     * @return Whether the server is stopping/has stopped or not
+     */
+    @Getter
+    private boolean stopping = false;
 
     /**
      * initialise a new server instance
@@ -241,8 +276,13 @@ public class Server {
         // debug
         this.debugMode = this.args.contains("-debug");
 
+        //        if (!this.log4jConfigSet()) {
+        //            System.setProperty("log4j2.configurationFile", "/log4j2.xml");
+        //        }
+
         // output
-        this.logger = new Logger(this);
+        //        this.logger = new Logger(this);
+        this.logger = LogManager.getLogger(GamerMode.class);
         this.gui = GuiWindow.start(this);
 
         // info
@@ -297,12 +337,22 @@ public class Server {
 
         // threading
         this.pool =
-            Executors.newFixedThreadPool(this.config.performance.poolSize);
+            (ThreadPoolExecutor) Executors.newFixedThreadPool(
+                this.config.performance.poolSize
+            );
+        this.pool.setThreadFactory(new ServerThreadFactory("pooled"));
+        this.daemonPool =
+            (ThreadPoolExecutor) Executors.newFixedThreadPool(
+                this.config.performance.poolSize
+            );
+        this.daemonPool.setThreadFactory(new DaemonThreadFactory());
         this.scheduler =
-            Executors.newScheduledThreadPool(
+            (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(
                 this.config.performance.scheduledPoolSize
             );
-        this.taskPool = Executors.newCachedThreadPool();
+        this.scheduler.setThreadFactory(new ServerThreadFactory("scheduled"));
+        this.taskPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        this.taskPool.setThreadFactory(new ServerThreadFactory("cached"));
 
         // cache
         this.cache = new CacheProvider(this);
@@ -317,6 +367,15 @@ public class Server {
         this.worldManager = new WorldManager(this);
         this.worldManager.loadWorlds();
 
+        try {
+            this.console = new Console(this);
+            this.console.getRenderer().startOutput();
+        } catch (IOException e) {
+            this.logger.fatal("Failed to initialise the console");
+            this.fatalShutdown(e);
+            return;
+        }
+
         this.getLogger().info("Server initialised. Starting socket...");
 
         this.sock = new SocketManager(this);
@@ -324,6 +383,15 @@ public class Server {
             this.sock.start();
         } catch (IOException e) {
             this.fatalShutdown(e);
+        }
+    }
+
+    public boolean log4jConfigSet() {
+        try {
+            System.getProperty("log4j2.configurationFile");
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
         }
     }
 
@@ -358,11 +426,16 @@ public class Server {
      * @param e The fatal error/exception
      */
     public void fatalShutdown(Exception e) {
-        this.getLogger().printStackTrace(e);
+        this.getLogger()
+            .fatal("Fatal error occurred that requires shutdown", e);
         try {
             this.shutdown(1);
         } catch (IOException e1) {
-            this.getLogger().printStackTrace(e1);
+            this.getLogger()
+                .fatal(
+                    "Fatal error while shutting down due to previous fatal error",
+                    e1
+                );
             System.exit(1);
         }
     }
@@ -375,6 +448,7 @@ public class Server {
      */
     public void shutdown(int status) throws IOException {
         this.getLogger().info("Goodbye!");
+        this.stopping = true;
 
         TextComponent shutDownMessage = LegacyComponentSerializer
             .legacyAmpersand()
@@ -386,7 +460,8 @@ public class Server {
 
         try {
             this.loadConfig();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         this.saveConfig();
 
         this.gui.stop();

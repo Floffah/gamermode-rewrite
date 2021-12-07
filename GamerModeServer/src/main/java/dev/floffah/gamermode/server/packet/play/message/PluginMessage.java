@@ -65,7 +65,7 @@ public class PluginMessage extends BasePacket {
                     .getSocketManager()
                     .getServer()
                     .getLogger()
-                    .printStackTrace(e);
+                    .error("Error occurred while reading plugin message", e);
                 break;
             }
         }
