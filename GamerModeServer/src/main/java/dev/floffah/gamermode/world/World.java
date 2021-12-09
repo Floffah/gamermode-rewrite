@@ -2,19 +2,18 @@ package dev.floffah.gamermode.world;
 
 import dev.floffah.gamermode.entity.player.Player;
 import dev.floffah.gamermode.world.dimension.DimensionType;
-import lombok.Getter;
-import lombok.NonNull;
-import net.querz.nbt.io.NBTUtil;
-import net.querz.nbt.io.NamedTag;
-import net.querz.nbt.tag.CompoundTag;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.NonNull;
+import net.querz.nbt.io.NBTUtil;
+import net.querz.nbt.io.NamedTag;
+import net.querz.nbt.tag.CompoundTag;
+import org.jetbrains.annotations.Nullable;
 
 public class World {
 

@@ -7,6 +7,7 @@ import dev.floffah.gamermode.config.Config;
 import dev.floffah.gamermode.console.Console;
 import dev.floffah.gamermode.entity.player.Player;
 import dev.floffah.gamermode.events.EventEmitter;
+import dev.floffah.gamermode.events.state.ServerLoadEvent;
 import dev.floffah.gamermode.server.cache.CacheProvider;
 import dev.floffah.gamermode.server.socket.SocketConnection;
 import dev.floffah.gamermode.server.socket.SocketManager;
@@ -14,11 +15,6 @@ import dev.floffah.gamermode.util.concurrent.DaemonThreadFactory;
 import dev.floffah.gamermode.util.concurrent.ServerThreadFactory;
 import dev.floffah.gamermode.visual.gui.GuiWindow;
 import dev.floffah.gamermode.world.WorldManager;
-import lombok.Getter;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.apache.logging.log4j.LogManager;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -33,6 +29,10 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
+import lombok.Getter;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.apache.logging.log4j.LogManager;
 
 public class Server {
 
@@ -276,13 +276,13 @@ public class Server {
         // debug
         this.debugMode = this.args.contains("-debug");
 
-        //        if (!this.log4jConfigSet()) {
-        //            System.setProperty("log4j2.configurationFile", "/log4j2.xml");
-        //        }
-
         // output
-        //        this.logger = new Logger(this);
         this.logger = LogManager.getLogger(GamerMode.class);
+
+        // events
+        this.events = new EventEmitter(this);
+
+        // visual
         this.gui = GuiWindow.start(this);
 
         // info
@@ -294,9 +294,6 @@ public class Server {
                     System.getProperty("os.name")
                 )
             );
-
-        // events
-        this.events = new EventEmitter(this);
 
         // config
         this.om = new ObjectMapper(new YAMLFactory());
@@ -384,6 +381,8 @@ public class Server {
         } catch (IOException e) {
             this.fatalShutdown(e);
         }
+
+        this.events.execute(new ServerLoadEvent());
     }
 
     public boolean log4jConfigSet() {
@@ -460,8 +459,7 @@ public class Server {
 
         try {
             this.loadConfig();
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
         this.saveConfig();
 
         this.gui.stop();

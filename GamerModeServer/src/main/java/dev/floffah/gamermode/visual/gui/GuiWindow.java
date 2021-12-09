@@ -1,5 +1,8 @@
 package dev.floffah.gamermode.visual.gui;
 
+import dev.floffah.gamermode.events.EventListener;
+import dev.floffah.gamermode.events.Listener;
+import dev.floffah.gamermode.events.state.ServerLoadEvent;
 import dev.floffah.gamermode.server.Server;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -10,7 +13,7 @@ import java.io.InputStream;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 
-public class GuiWindow {
+public class GuiWindow implements Listener {
 
     public boolean loaded = false;
     Server main;
@@ -24,6 +27,7 @@ public class GuiWindow {
      */
     public GuiWindow(Server main) {
         this.main = main;
+        this.main.getEvents().registerListeners(this);
     }
 
     /**
@@ -44,7 +48,9 @@ public class GuiWindow {
             try {
                 return create(main);
             } catch (IOException e) {
-                main.getLogger().error("Error occurred while creating the gui window", e);
+                main
+                    .getLogger()
+                    .error("Error occurred while creating the gui window", e);
             }
         }
         return null;
@@ -119,7 +125,12 @@ public class GuiWindow {
                     try {
                         main.shutdown();
                     } catch (IOException ioException) {
-                        main.getLogger().error("Error occurred while trying to shutdown the server after gui window was closed by user", ioException);
+                        main
+                            .getLogger()
+                            .error(
+                                "Error occurred while trying to shutdown the server after gui window was closed by user",
+                                ioException
+                            );
                     }
                 }
             }
@@ -130,6 +141,20 @@ public class GuiWindow {
         frame.setVisible(true);
 
         loaded = true;
+    }
+
+    @EventListener
+    public void onLoaded(ServerLoadEvent e) {
+        this.main.getDaemonPool()
+            .execute(() -> {
+                String nextLog;
+                while (
+                    (nextLog = GuiAppender.next("GuiWindow")) !=
+                    null
+                ) {
+                    this.log(nextLog);
+                }
+            });
     }
 
     /**
@@ -146,6 +171,8 @@ public class GuiWindow {
      * @param message The message to append.
      */
     public void log(String message) {
-        SwingUtilities.invokeLater(() -> text.append(message));
+        if (SwingUtilities.isEventDispatchThread()) this.text.append(
+                message
+            ); else SwingUtilities.invokeLater(() -> this.log(message));
     }
 }

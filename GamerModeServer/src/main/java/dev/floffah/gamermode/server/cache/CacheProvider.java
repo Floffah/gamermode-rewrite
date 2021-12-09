@@ -49,7 +49,9 @@ public class CacheProvider {
             }
             validate();
         } catch (IOException e) {
-            server.getLogger().error("Error occurred while trying to read cacheinfo file", e);
+            server
+                .getLogger()
+                .error("Error occurred while trying to read cacheinfo file", e);
         }
     }
 

@@ -69,7 +69,12 @@ public class EventEmitter {
                     } catch (
                         IllegalAccessException | InvocationTargetException e
                     ) {
-                        server.getLogger().error("Error occurred while invoking an event listener's executor", e);
+                        server
+                            .getLogger()
+                            .error(
+                                "Error occurred while invoking an event listener's executor",
+                                e
+                            );
                     }
                 }
             };

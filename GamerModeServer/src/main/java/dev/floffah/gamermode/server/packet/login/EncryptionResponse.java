@@ -109,7 +109,10 @@ public class EncryptionResponse extends BasePacket {
             this.conn.getSocketManager()
                 .getServer()
                 .getLogger()
-                .error("Error occurred while decrypting the encryption verification token", e);
+                .error(
+                    "Error occurred while decrypting the encryption verification token",
+                    e
+                );
             this.conn.disconnect(
                     Component.text(e.getMessage()).color(NamedTextColor.RED)
                 );
@@ -150,7 +153,10 @@ public class EncryptionResponse extends BasePacket {
             this.conn.getSocketManager()
                 .getServer()
                 .getLogger()
-                .error("Error occurred while initiating encryption and decryption cipher", e);
+                .error(
+                    "Error occurred while initiating encryption and decryption cipher",
+                    e
+                );
             this.conn.disconnect(
                     Component
                         .text(e.getMessage())
@@ -200,7 +206,10 @@ public class EncryptionResponse extends BasePacket {
             this.conn.getSocketManager()
                 .getServer()
                 .getLogger()
-                .error("Error occurred while notifying the Mojang API of the player joining", e);
+                .error(
+                    "Error occurred while notifying the Mojang API of the player joining",
+                    e
+                );
             this.conn.disconnect(
                     Component.text(e.getMessage()).color(NamedTextColor.RED)
                 );

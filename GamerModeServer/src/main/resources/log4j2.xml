@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
+<Configuration xmlns:xi="http://www.w3.org/2001/XInclude" packages="dev.floffah.gamermode" status="WARN">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="[%t] [%d{yyyy-mm-dd HH:mm:ss.SSS} %level]: %msg%n"/>
         </Console>
+        <GuiAppender name="GuiWindow">
+            <PatternLayout pattern="[%t] [%d{HH:mm:ss.SSS} %level]: %msg%n"/>
+        </GuiAppender>
+        <RollingRandomAccessFile name="Disk" fileName="data/logs/current.log"
+                                 filePattern="data/logs/previous/%d{yyyy-MM-dd.HH-mm-ss}.%i.log.gz">
+            <PatternLayout pattern="[%t] [%d{yyyy-mm-dd HH:mm:ss.SSS} %level]: %msg%n"/>
+            <DefaultRolloverStrategy max="2000"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+        </RollingRandomAccessFile>
+        <Async name="Main">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="GuiWindow"/>
+            <AppenderRef ref="Disk"/>
+        </Async>
     </Appenders>
     <Loggers>
         <Root level="info">
-            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Main"/>
         </Root>
     </Loggers>
 </Configuration>

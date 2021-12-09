@@ -362,7 +362,12 @@ public class SocketConnection {
                 try {
                     startPacketReader();
                 } catch (IOException e) {
-                    main.server.getLogger().error("Error occurred while starting the packet reader", e);
+                    main.server
+                        .getLogger()
+                        .error(
+                            "Error occurred while starting the packet reader",
+                            e
+                        );
                 }
             });
     }
@@ -404,7 +409,11 @@ public class SocketConnection {
                     break;
                 }
             } catch (IOException e) {
-                this.socketManager.server.getLogger().error("Error occurred while checking if the connection was closed", e);
+                this.socketManager.server.getLogger()
+                    .error(
+                        "Error occurred while checking if the connection was closed",
+                        e
+                    );
             } catch (ConditionTimeoutException ignored) {}
         }
         try {
@@ -429,12 +438,17 @@ public class SocketConnection {
             this.close();
         } catch (IOException e) {
             this.closed = true;
-            this.socketManager.server.getLogger().error("Error occurred while disconnecting the client", e);
+            this.socketManager.server.getLogger()
+                .error("Error occurred while disconnecting the client", e);
 
             try {
                 this.socketManager.disposeConnection(this);
             } catch (IOException e1) {
-                this.socketManager.server.getLogger().error("Error occurred while disposing of the connection after disconnecting the client", e1);
+                this.socketManager.server.getLogger()
+                    .error(
+                        "Error occurred while disposing of the connection after disconnecting the client",
+                        e1
+                    );
             }
         }
     }
@@ -497,13 +511,21 @@ public class SocketConnection {
             try {
                 out.write(sent);
             } catch (SocketException e) {
-                this.socketManager.server.getLogger().debug("Error occurred while writing a byte array to the output stream", e);
+                this.socketManager.server.getLogger()
+                    .debug(
+                        "Error occurred while writing a byte array to the output stream",
+                        e
+                    );
                 if (e.getMessage().contains("reset")) this.close();
             }
             try {
                 out.flush();
             } catch (SocketException e) {
-                this.socketManager.server.getLogger().debug("Error occurred while flushing the output stream", e);
+                this.socketManager.server.getLogger()
+                    .debug(
+                        "Error occurred while flushing the output stream",
+                        e
+                    );
                 if (
                     e.getMessage().toLowerCase().contains("closed") ||
                     e.getMessage().toLowerCase().contains("aborted")
@@ -655,7 +677,8 @@ public class SocketConnection {
                     disconnect(
                         Component.text(e.getMessage()).color(NamedTextColor.RED)
                     );
-                    this.socketManager.server.getLogger().error("Error occurred while processing a packet", e);
+                    this.socketManager.server.getLogger()
+                        .error("Error occurred while processing a packet", e);
                     break;
                 }
             }

@@ -2,9 +2,8 @@ package dev.floffah.gamermode.console;
 
 import dev.floffah.gamermode.server.Server;
 import dev.floffah.gamermode.visual.console.ConsoleRenderer;
-import lombok.Getter;
-
 import java.io.IOException;
+import lombok.Getter;
 
 public class Console {
 
