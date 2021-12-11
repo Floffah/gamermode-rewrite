@@ -148,10 +148,7 @@ public class GuiWindow implements Listener {
         this.main.getDaemonPool()
             .execute(() -> {
                 String nextLog;
-                while (
-                    (nextLog = GuiAppender.next("GuiWindow")) !=
-                    null
-                ) {
+                while ((nextLog = GuiAppender.next("GuiWindow")) != null) {
                     this.log(nextLog);
                 }
             });

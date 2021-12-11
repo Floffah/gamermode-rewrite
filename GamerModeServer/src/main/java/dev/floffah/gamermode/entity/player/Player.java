@@ -1,6 +1,7 @@
 package dev.floffah.gamermode.entity.player;
 
 import com.google.common.io.ByteArrayDataOutput;
+import dev.floffah.gamermode.command.CommandSender;
 import dev.floffah.gamermode.datatype.Identifier;
 import dev.floffah.gamermode.entity.DamageableEntity;
 import dev.floffah.gamermode.entity.Entity;
@@ -17,7 +18,7 @@ import net.kyori.adventure.identity.Identity;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
-public class Player implements Entity, DamageableEntity, Identified {
+public class Player implements Entity, DamageableEntity, Identified, CommandSender {
 
     /**
      * The player's connection
@@ -149,7 +150,7 @@ public class Player implements Entity, DamageableEntity, Identified {
     @Getter
     private float health;
 
-    private PlayerIdentity identity;
+    private final PlayerIdentity identity;
 
     public Player(SocketConnection conn) {
         this.conn = conn;
@@ -253,5 +254,10 @@ public class Player implements Entity, DamageableEntity, Identified {
     @Override
     public @NotNull Identity identity() {
         return this.identity;
+    }
+
+    @Override
+    public String senderName() {
+        return this.getUsername();
     }
 }

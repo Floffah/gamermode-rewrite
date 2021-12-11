@@ -4,6 +4,7 @@ players:
 info:
   motd: "Minecraft server"
   port: 25565
+  uuid: "df869bed-60fd-4739-8ac1-98a05c72dce0"
 worlds:
   worldname: "world"
   renderDistance: 8

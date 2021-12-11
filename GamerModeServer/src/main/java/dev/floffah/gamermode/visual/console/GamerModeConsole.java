@@ -43,18 +43,26 @@ public class GamerModeConsole extends SimpleTerminalConsole {
 
     @Override
     protected void runCommand(String command) {
+        this.renderer.getConsole()
+            .getServer()
+            .getCommands()
+            .getStore()
+            .execute(
+                this.getRenderer().getConsole().getCommandExecutor(),
+                command
+            );
         // temporary
-        if (Objects.equals(command, "stop")) try {
-            this.renderer.getConsole().getServer().shutdown();
-        } catch (IOException e) {
-            this.renderer.getConsole()
-                .getRenderer()
-                .getConsole()
-                .getServer()
-                .getLogger()
-                .fatal("Could not stop server", e);
-            System.exit(1);
-        }
+        //        if (Objects.equals(command, "stop")) try {
+        //            this.renderer.getConsole().getServer().shutdown();
+        //        } catch (IOException e) {
+        //            this.renderer.getConsole()
+        //                .getRenderer()
+        //                .getConsole()
+        //                .getServer()
+        //                .getLogger()
+        //                .fatal("Could not stop server", e);
+        //            System.exit(1);
+        //        }
     }
 
     @Override

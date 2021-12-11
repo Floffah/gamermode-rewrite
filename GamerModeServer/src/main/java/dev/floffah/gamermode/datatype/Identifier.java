@@ -2,7 +2,10 @@ package dev.floffah.gamermode.datatype;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class Identifier {
 
@@ -85,5 +88,18 @@ public class Identifier {
         if (this.getNamespace() != null) value += (this.getNamespace() + ":");
         value += this.getName();
         return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Identifier that = (Identifier) o;
+        return Objects.equals(namespace, that.namespace) && name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(namespace, name);
     }
 }

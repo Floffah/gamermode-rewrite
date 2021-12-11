@@ -12,7 +12,7 @@ public class PlayerIdentity implements Identity {
     }
 
     @Override
-    public java.util.@NotNull UUID uuid() {
+    public @NotNull java.util.UUID uuid() {
         return this.player.getUniqueId();
     }
 

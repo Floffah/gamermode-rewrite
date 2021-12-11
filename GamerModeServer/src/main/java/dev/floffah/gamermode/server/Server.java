@@ -3,6 +3,7 @@ package dev.floffah.gamermode.server;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import dev.floffah.gamermode.GamerMode;
+import dev.floffah.gamermode.command.CommandManager;
 import dev.floffah.gamermode.config.Config;
 import dev.floffah.gamermode.console.Console;
 import dev.floffah.gamermode.entity.player.Player;
@@ -265,6 +266,22 @@ public class Server {
     private boolean stopping = false;
 
     /**
+     * Server's unique id
+     */
+    @Getter
+    private UUID uniqueId;
+
+    /**
+     * The server's command executor and manager
+     * -- GETTER --
+     * Get the server's command executor and manager
+     *
+     * @return The server's command executor and manager
+     */
+    @Getter
+    private CommandManager commands;
+
+    /**
      * initialise a new server instance
      *
      * @param args the command line arguments
@@ -281,6 +298,8 @@ public class Server {
 
         // events
         this.events = new EventEmitter(this);
+
+        this.commands = new CommandManager(this);
 
         // visual
         this.gui = GuiWindow.start(this);
@@ -327,6 +346,7 @@ public class Server {
         } catch (URISyntaxException | IOException e) {
             this.fatalShutdown(e);
         }
+        this.uniqueId = this.config.info.uuid;
 
         // directories
         this.dataDir = Path.of(this.rootDir.getPath(), "data").toFile();
@@ -381,6 +401,8 @@ public class Server {
         } catch (IOException e) {
             this.fatalShutdown(e);
         }
+
+        this.commands.initialise();
 
         this.events.execute(new ServerLoadEvent());
     }

@@ -1,5 +1,7 @@
 package dev.floffah.gamermode.config;
 
+import java.util.UUID;
+
 public class Config {
 
     /**
@@ -47,6 +49,10 @@ public class Config {
          * Server port to listen on
          */
         public int port = 25565;
+        /**
+         * Server's unique ID
+         */
+        public UUID uuid = UUID.randomUUID();
     }
 
     /**
