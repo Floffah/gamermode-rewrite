@@ -1,6 +1,7 @@
 package dev.floffah.gamermode.entity.player;
 
 import dev.floffah.gamermode.error.UUIDMismatchException;
+import dev.floffah.gamermode.inventory.Inventory;
 import dev.floffah.gamermode.world.WorldManager;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class Profile {
         URL joinUrl = new URL(
             sessionhasJoinedURL +
             "?username=" +
-            this.player.username +
+            this.player.name +
             "&serverId=" +
             this.player.getConn().getSessionHash()
         );
@@ -73,8 +74,8 @@ public class Profile {
         // read the player's data
 
         if (
-            !this.player.username.equals(response.getString("name"))
-        ) this.player.username = response.getString("name");
+            !this.player.name.equals(response.getString("name"))
+        ) this.player.name = response.getString("name");
 
         WorldManager wm =
             this.getPlayer()
@@ -96,6 +97,8 @@ public class Profile {
         }
 
         wm.writeRawPlayerData(this.getPlayer());
+
+        this.player.inventory = new PlayerInventory(this.player);
     }
 
     /**
@@ -104,6 +107,6 @@ public class Profile {
      * @param username The client's claimed username
      */
     public void startLogin(String username) {
-        this.player.username = username;
+        this.player.name = username;
     }
 }

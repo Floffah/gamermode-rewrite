@@ -13,7 +13,10 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A fork of Minecrell's <a href="https://github.com/Minecrell/TerminalConsoleAppender/blob/master/src/main/java/net/minecrell/terminalconsole/MinecraftFormattingConverter.java">MinecraftFormattingConverter</a>.
  */
-@Plugin(name = "gamermodeMinecraftFormatting", category = PatternConverter.CATEGORY)
+@Plugin(
+    name = "gamermodeMinecraftFormatting",
+    category = PatternConverter.CATEGORY
+)
 @ConverterKeys({ "gamermodeMinecraftFormatting" })
 @PerformanceSensitive("allocation")
 public final class MinecraftFormattingConverter

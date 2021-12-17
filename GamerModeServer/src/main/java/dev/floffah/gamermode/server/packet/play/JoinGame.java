@@ -8,20 +8,24 @@ import dev.floffah.gamermode.datatype.VarInt;
 import dev.floffah.gamermode.datatype.util.StringUtil;
 import dev.floffah.gamermode.events.network.PacketSentEvent;
 import dev.floffah.gamermode.server.packet.BasePacket;
+import dev.floffah.gamermode.server.packet.Packet;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.play.info.ServerDifficulty;
 import dev.floffah.gamermode.server.packet.play.state.PlayerAbilitiesClientBound;
+import dev.floffah.gamermode.server.socket.ConnectionState;
 import dev.floffah.gamermode.world.World;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import net.querz.nbt.io.NBTSerializer;
 import net.querz.nbt.io.NamedTag;
 
+@Packet(
+    name = "JoinGame",
+    id = 0x26,
+    type = PacketType.CLIENTBOUND,
+    state = ConnectionState.PLAY
+)
 public class JoinGame extends BasePacket {
-
-    public JoinGame() {
-        super("JoinGame", 0x26, PacketType.CLIENTBOUND);
-    }
 
     @Override
     public ByteArrayDataOutput buildOutput() throws IOException {

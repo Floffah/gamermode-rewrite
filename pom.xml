@@ -28,7 +28,7 @@
         <junit.version>5.8.2</junit.version>
         <jackson.version>2.13.0</jackson.version>
         <jline.version>3.21.0</jline.version>
-        <log4j.version>2.15.0</log4j.version>
+        <log4j.version>2.16.0</log4j.version>
     </properties>
 
     <build>
@@ -147,7 +147,7 @@
                         >${project.build.sourceEncoding}</docencoding>
                         <charset>${project.build.sourceEncoding}</charset>
                         <source>${maven.compiler.source}</source>
-                        <release>15</release>
+                        <release>17</release>
                         <additionalOptions>-Xdoclint:none</additionalOptions>
                     </configuration>
                     <executions>

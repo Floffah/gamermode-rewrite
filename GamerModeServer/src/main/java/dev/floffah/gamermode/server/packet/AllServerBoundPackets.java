@@ -3,7 +3,8 @@ package dev.floffah.gamermode.server.packet;
 import dev.floffah.gamermode.server.packet.login.EncryptionResponse;
 import dev.floffah.gamermode.server.packet.login.LoginStart;
 import dev.floffah.gamermode.server.packet.play.connection.KeepAliveServerBound;
-import dev.floffah.gamermode.server.packet.play.message.PluginMessage;
+import dev.floffah.gamermode.server.packet.play.message.PluginMessageClientBound;
+import dev.floffah.gamermode.server.packet.play.settings.ClientSettings;
 import dev.floffah.gamermode.server.packet.serverlist.Handshake;
 import dev.floffah.gamermode.server.packet.serverlist.Ping;
 import dev.floffah.gamermode.server.packet.serverlist.Request;
@@ -22,7 +23,9 @@ public enum AllServerBoundPackets {
     ENCRYPTION_RESPONSE(0x01, ConnectionState.LOGIN, EncryptionResponse.class),
 
     // PLAY
-    PLUGIN_MESSAGE(0x0A, ConnectionState.PLAY, PluginMessage.class),
+    CLIENT_SETTINGS(0x05, ConnectionState.PLAY, ClientSettings.class),
+
+    PLUGIN_MESSAGE(0x0A, ConnectionState.PLAY, PluginMessageClientBound.class),
 
     KEEPALIVE(0x0F, ConnectionState.PLAY, KeepAliveServerBound.class);
 

@@ -18,6 +18,6 @@ public class PlayerIdentity implements Identity {
 
     @Override
     public @NotNull String examinableName() {
-        return this.player.getUsername();
+        return this.player.getName();
     }
 }

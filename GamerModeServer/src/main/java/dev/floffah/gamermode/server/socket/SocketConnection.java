@@ -10,6 +10,7 @@ import dev.floffah.gamermode.entity.player.Player;
 import dev.floffah.gamermode.events.network.PacketSendingEvent;
 import dev.floffah.gamermode.events.network.PacketSentEvent;
 import dev.floffah.gamermode.server.packet.BasePacket;
+import dev.floffah.gamermode.server.packet.Packet;
 import dev.floffah.gamermode.server.packet.PacketTranslator;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.connection.Disconnect;
@@ -40,6 +41,8 @@ import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.awaitility.core.ConditionTimeoutException;
 
 public class SocketConnection {
+
+    private final List<ScheduledFuture<?>> cancellableFutures = new ArrayList<>();
 
     /**
      * The current state of the connection.
@@ -151,7 +154,6 @@ public class SocketConnection {
      * @return The current keep alive packet ID.
      * -- SETTER --
      * Sets the current keep alive packet ID.
-     *
      * @param id The current keep alive packet ID.
      */
     @Getter
@@ -330,8 +332,6 @@ public class SocketConnection {
     @Getter
     protected Player player;
 
-    private final List<ScheduledFuture<?>> cancellableFutures = new ArrayList<>();
-
     /**
      * Secure random instance that generates random longs for keep alive ids
      * -- GETTER --
@@ -470,6 +470,12 @@ public class SocketConnection {
     public void send(BasePacket p) throws IOException {
         p.conn = this;
 
+        Packet meta = p.getClass().getAnnotation(Packet.class);
+        p.type = meta.type();
+        p.id = meta.id();
+        p.name = meta.name();
+        p.state = meta.state();
+
         ByteArrayDataOutput dataOutput;
 
         try {
@@ -492,13 +498,16 @@ public class SocketConnection {
             socketManager.server
                 .getLogger()
                 .debug(
-                    "SENDING",
-                    this.encrypted ? "encrypted" : "not encrypted",
-                    String.valueOf(this.state),
-                    p.name,
-                    Integer.toString(dataOutBytes.length + 1),
-                    Integer.toString(p.id),
-                    Arrays.toString(dataOutBytes)
+                    String.join(
+                        " ",
+                        "SENDING",
+                        this.encrypted ? "encrypted" : "not encrypted",
+                        String.valueOf(this.state),
+                        p.name,
+                        Integer.toString(dataOutBytes.length + 1),
+                        Integer.toString(p.id),
+                        Arrays.toString(dataOutBytes)
+                    )
                 );
 
             new VarInt(dataOutBytes.length + 1).writeTo(finalOutput);
@@ -535,13 +544,16 @@ public class SocketConnection {
             socketManager.server
                 .getLogger()
                 .debug(
-                    "SENT",
-                    this.encrypted ? "encrypted" : "not encrypted",
-                    String.valueOf(this.state),
-                    p.name,
-                    Integer.toString(sent.length - 1),
-                    Integer.toString(p.id),
-                    Arrays.toString(sent)
+                    String.join(
+                        " ",
+                        "SENT",
+                        this.encrypted ? "encrypted" : "not encrypted",
+                        String.valueOf(this.state),
+                        p.name,
+                        Integer.toString(sent.length - 1),
+                        Integer.toString(p.id),
+                        Arrays.toString(sent)
+                    )
                 );
 
             PacketSentEvent sentEvent = new PacketSentEvent(p, dataOutput);
@@ -652,13 +664,16 @@ public class SocketConnection {
                 }
                 this.socketManager.server.getLogger()
                     .debug(
-                        "RECEIVED",
-                        this.encrypted ? "encrypted" : "not encrypted",
-                        packet.name,
-                        String.valueOf(state),
-                        Integer.toString(len),
-                        Integer.toString(id),
-                        Arrays.toString(data)
+                        String.join(
+                            " ",
+                            "RECEIVED",
+                            this.encrypted ? "encrypted" : "not encrypted",
+                            packet.name,
+                            String.valueOf(state),
+                            Integer.toString(len),
+                            Integer.toString(id),
+                            Arrays.toString(data)
+                        )
                     );
                 if (packet.type == PacketType.UNKNOWN) {
                     disconnect(

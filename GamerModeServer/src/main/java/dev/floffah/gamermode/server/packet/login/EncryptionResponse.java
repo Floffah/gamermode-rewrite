@@ -8,6 +8,7 @@ import dev.floffah.gamermode.datatype.VarInt;
 import dev.floffah.gamermode.datatype.util.StringUtil;
 import dev.floffah.gamermode.error.UUIDMismatchException;
 import dev.floffah.gamermode.server.packet.BasePacket;
+import dev.floffah.gamermode.server.packet.Packet;
 import dev.floffah.gamermode.server.packet.PacketType;
 import dev.floffah.gamermode.server.packet.play.JoinGame;
 import dev.floffah.gamermode.server.packet.play.info.ServerDifficulty;
@@ -26,20 +27,21 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import dev.floffah.gamermode.server.socket.ConnectionState;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 /**
  * Incoming login packet for processing the client's encryption response
  */
+@Packet(
+    name = "LoginEncryptionResponse",
+    id = 0x01,
+    type = PacketType.SERVERBOUND,
+    state = ConnectionState.LOGIN
+)
 public class EncryptionResponse extends BasePacket {
-
-    /**
-     * Construct an EncryptionResponse
-     */
-    public EncryptionResponse() {
-        super("LoginEncryptionResponse", 0x01, PacketType.SERVERBOUND);
-    }
 
     @Override
     public void process(int len, ByteArrayDataInput in) throws IOException {

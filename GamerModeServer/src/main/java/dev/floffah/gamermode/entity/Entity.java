@@ -53,6 +53,13 @@ public interface Entity {
     void setWorld(World world);
 
     /**
+     * Get the entity's name
+     *
+     * @return The entity's name
+     */
+    String getName();
+
+    /**
      * Apply NBT data to the entity. This is called when saving.
      * When overriding, make sure to call Entity.super.applySavableData(tag) for every entity-based interface being implemented (including entity) first
      *

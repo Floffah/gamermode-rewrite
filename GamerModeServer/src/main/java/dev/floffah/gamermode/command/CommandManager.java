@@ -4,6 +4,7 @@ import dev.floffah.gamermode.server.Server;
 import lombok.Getter;
 
 public class CommandManager {
+
     @Getter
     private final Server server;
 

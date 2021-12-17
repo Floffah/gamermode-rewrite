@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Deprecated
 public class ConsoleIdentity implements Identity {
+
     ConsoleCommandSender executor;
 
     /**

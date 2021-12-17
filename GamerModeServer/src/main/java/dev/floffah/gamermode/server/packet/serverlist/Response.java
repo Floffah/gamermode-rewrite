@@ -4,9 +4,12 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.floffah.gamermode.datatype.util.StringUtil;
 import dev.floffah.gamermode.server.packet.BasePacket;
+import dev.floffah.gamermode.server.packet.Packet;
 import dev.floffah.gamermode.server.packet.PacketType;
 import java.io.IOException;
 import java.util.UUID;
+
+import dev.floffah.gamermode.server.socket.ConnectionState;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
@@ -14,11 +17,13 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+@Packet(
+    name = "ServerListResponse",
+    id = 0x00,
+    type = PacketType.CLIENTBOUND,
+    state = ConnectionState.STATUS
+)
 public class Response extends BasePacket {
-
-    public Response() {
-        super("ServerListResponse", 0x00, PacketType.CLIENTBOUND);
-    }
 
     @Override
     public ByteArrayDataOutput buildOutput() throws IOException {

@@ -10,6 +10,7 @@ import dev.floffah.gamermode.entity.player.Player;
 import dev.floffah.gamermode.events.EventEmitter;
 import dev.floffah.gamermode.events.state.ServerLoadEvent;
 import dev.floffah.gamermode.server.cache.CacheProvider;
+import dev.floffah.gamermode.server.packet.PacketTranslator;
 import dev.floffah.gamermode.server.socket.SocketConnection;
 import dev.floffah.gamermode.server.socket.SocketManager;
 import dev.floffah.gamermode.util.concurrent.DaemonThreadFactory;
@@ -395,6 +396,8 @@ public class Server {
 
         this.getLogger().info("Server initialised. Starting socket...");
 
+        PacketTranslator.storePackets();
+
         this.sock = new SocketManager(this);
         try {
             this.sock.start();
@@ -484,7 +487,7 @@ public class Server {
         } catch (Exception ignored) {}
         this.saveConfig();
 
-        this.gui.stop();
+        if (this.gui != null) this.gui.stop();
         System.exit(status);
     }
 

@@ -4,15 +4,23 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.floffah.gamermode.events.network.PacketSentEvent;
 import dev.floffah.gamermode.server.packet.BasePacket;
+import dev.floffah.gamermode.server.packet.Packet;
 import dev.floffah.gamermode.server.packet.PacketType;
+import dev.floffah.gamermode.server.socket.ConnectionState;
+
 import java.io.IOException;
 
+@Packet(
+    name = "ServerListPong",
+    id = 0x01,
+    type = PacketType.CLIENTBOUND,
+    state = ConnectionState.STATUS
+)
 public class Pong extends BasePacket {
 
     long payload;
 
     public Pong(long payload) {
-        super("ServerListPong", 0x01, PacketType.CLIENTBOUND);
         this.payload = payload;
     }
 

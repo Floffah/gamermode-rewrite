@@ -1,4 +1,4 @@
-package dev.floffah.gamermode.server.packet.play.info;
+package dev.floffah.gamermode.server.packet.play.state.inventory;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -10,26 +10,17 @@ import dev.floffah.gamermode.server.socket.ConnectionState;
 import java.io.IOException;
 
 @Packet(
-    name = "ServerDifficulty",
-    id = 0x0E,
+    name = "HeldItemChange",
+    state = ConnectionState.PLAY,
     type = PacketType.CLIENTBOUND,
-    state = ConnectionState.PLAY
+    id = 0x47
 )
-public class ServerDifficulty extends BasePacket {
-
+public class HeldItemChange extends BasePacket {
     @Override
     public ByteArrayDataOutput buildOutput() throws IOException {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
-        out.write(
-            Byte.toUnsignedInt(
-                this.conn.getSocketManager()
-                    .getServer()
-                    .getConfig()
-                    .worlds.difficulty
-            )
-        );
-        out.writeBoolean(true);
+        out.writeByte(this.conn.getPlayer().getInventory().getSelectedSlot());
 
         return out;
     }

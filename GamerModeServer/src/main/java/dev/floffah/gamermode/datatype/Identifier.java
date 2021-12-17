@@ -1,11 +1,10 @@
 package dev.floffah.gamermode.datatype;
 
+import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 public class Identifier {
 
@@ -95,7 +94,9 @@ public class Identifier {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Identifier that = (Identifier) o;
-        return Objects.equals(namespace, that.namespace) && name.equals(that.name);
+        return (
+            Objects.equals(namespace, that.namespace) && name.equals(that.name)
+        );
     }
 
     @Override

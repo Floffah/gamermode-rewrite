@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Configuration
     xmlns:xi="http://www.w3.org/2001/XInclude"
-    packages="dev.floffah.gamermode,net.minecrell.terminalconsole"
+    packages="dev.floffah.gamermode"
     status="WARN">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout
-                pattern="[%t] [%d{yyyy-mm-dd HH:mm:ss.SSS} %level]: %gamermodeMinecraftFormatting{%msg{nolookups}}%n"
-                disableAnsi="false"
+                pattern="[%t] [%d{yyyy-mm-dd HH:mm:ss.SSS} %level]: %msg{nolookups}%n"
             />
         </Console>
         <GuiAppender name="GuiWindow">
@@ -22,10 +21,11 @@
             <PatternLayout
                 pattern="[%t] [%d{yyyy-mm-dd HH:mm:ss.SSS} %level]: %msg{nolookups}%n"
             />
-            <DefaultRolloverStrategy max="1024" />
+            <DefaultRolloverStrategy max="1000" />
             <Policies>
-                <TimeBasedTriggeringPolicy />
                 <OnStartupTriggeringPolicy />
+<!--                <TimeBasedTriggeringPolicy/>-->
+                <SizeBasedTriggeringPolicy size="5 MB"/>
             </Policies>
         </RollingRandomAccessFile>
         <Async name="Main">
@@ -35,7 +35,7 @@
         </Async>
     </Appenders>
     <Loggers>
-        <Root level="info">
+        <Root level="debug">
             <filters>
                 <MarkerFilter
                     marker="NETWORK_PACKETS"

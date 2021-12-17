@@ -1,9 +1,8 @@
 package dev.floffah.gamermode.command;
 
 import dev.floffah.gamermode.datatype.Identifier;
-import java.util.List;
-
 import dev.floffah.gamermode.server.Server;
+import java.util.List;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

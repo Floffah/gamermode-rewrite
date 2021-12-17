@@ -6,7 +6,7 @@ import dev.floffah.gamermode.datatype.Identifier;
 import dev.floffah.gamermode.entity.DamageableEntity;
 import dev.floffah.gamermode.entity.Entity;
 import dev.floffah.gamermode.server.Server;
-import dev.floffah.gamermode.server.packet.play.message.PluginMessage;
+import dev.floffah.gamermode.server.packet.play.message.PluginMessageClientBound;
 import dev.floffah.gamermode.server.socket.SocketConnection;
 import dev.floffah.gamermode.world.World;
 import java.io.IOException;
@@ -18,7 +18,8 @@ import net.kyori.adventure.identity.Identity;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
-public class Player implements Entity, DamageableEntity, Identified, CommandSender {
+public class Player
+    implements Entity, DamageableEntity, Identified, CommandSender {
 
     /**
      * The player's connection
@@ -68,7 +69,7 @@ public class Player implements Entity, DamageableEntity, Identified, CommandSend
      * @return The player's username
      */
     @Getter
-    protected String username = null;
+    protected String name = null;
 
     /**
      * The player's current gamemode
@@ -150,7 +151,18 @@ public class Player implements Entity, DamageableEntity, Identified, CommandSend
     @Getter
     private float health;
 
+    /**
+     * The identity of the player
+     * -- GETTER --
+     * Get the player's identity
+     *
+     * @return The player's identity
+     */
+    @Getter
     private final PlayerIdentity identity;
+
+    @Getter
+    protected PlayerInventory inventory;
 
     public Player(SocketConnection conn) {
         this.conn = conn;
@@ -178,7 +190,7 @@ public class Player implements Entity, DamageableEntity, Identified, CommandSend
         Identifier channel,
         ByteArrayDataOutput message
     ) throws IOException {
-        this.conn.send(new PluginMessage(channel, message));
+        this.conn.send(new PluginMessageClientBound(channel, message));
     }
 
     @Override
@@ -258,6 +270,6 @@ public class Player implements Entity, DamageableEntity, Identified, CommandSend
 
     @Override
     public String senderName() {
-        return this.getUsername();
+        return this.getName();
     }
 }

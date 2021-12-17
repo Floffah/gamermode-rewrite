@@ -6,18 +6,23 @@ import dev.floffah.gamermode.datatype.VarInt;
 import dev.floffah.gamermode.datatype.util.StringUtil;
 import dev.floffah.gamermode.datatype.util.VarIntUtil;
 import dev.floffah.gamermode.server.packet.BasePacket;
+import dev.floffah.gamermode.server.packet.Packet;
 import dev.floffah.gamermode.server.packet.PacketType;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+
+import dev.floffah.gamermode.server.socket.ConnectionState;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+@Packet(
+    name = "LoginEncrytionRequest",
+    id = 0x01,
+    type = PacketType.CLIENTBOUND,
+    state = ConnectionState.LOGIN
+)
 public class EncryptionRequest extends BasePacket {
-
-    public EncryptionRequest() {
-        super("LoginEncryptionRequest", 0x01, PacketType.CLIENTBOUND);
-    }
 
     @Override
     public ByteArrayDataOutput buildOutput() throws IOException {

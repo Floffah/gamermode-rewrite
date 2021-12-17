@@ -14,9 +14,9 @@ import net.kyori.adventure.identity.Identity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ConsoleCommandSender extends ConsoleAudience
+public class ConsoleCommandSender
+    extends ConsoleAudience
     implements CommandSender, CanRegister, Listener {
-
 
     private final Identity identity = Identity.nil();
 
@@ -36,7 +36,7 @@ public class ConsoleCommandSender extends ConsoleAudience
 
     public ConsoleCommandSender(Console console) {
         super(console);
-//        this.console = console;
+        //        this.console = console;
         //        this.identity = new ConsoleIdentity(this);
         this.getConsole().getServer().getEvents().registerListeners(this);
     }
